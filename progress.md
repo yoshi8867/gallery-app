@@ -3,7 +3,7 @@
 ---
 
 ## 전체 진행도
-███░░░░░░░░░░░░░░░░░ 11% (3/28)
+████░░░░░░░░░░░░░░░░ 14% (4/28)
 
 ---
 
@@ -23,13 +23,13 @@
 - [x] `ACCESS_MEDIA_LOCATION` (EXIF GPS 읽기)
 - [x] PermissionScreen Composable (권한 요청 UI)
 
-### [P1-3] MediaStore 데이터 소스 ⏳
-- [ ] `MediaItem.kt` 도메인 모델 (사진/동영상 공통)
-- [ ] `Album.kt` 도메인 모델
-- [ ] `MediaStoreDataSource.kt` — 전체 미디어 쿼리 (날짜 내림차순)
-- [ ] `MediaRepository.kt`
-- [ ] `AlbumRepository.kt`
-- [ ] Hilt 모듈: `MediaStoreModule.kt`, `RepositoryModule.kt`
+### [P1-3] MediaStore 데이터 소스 ✅
+- [x] `MediaItem.kt` 도메인 모델 (사진/동영상 공통)
+- [x] `Album.kt` 도메인 모델
+- [x] `MediaStoreDataSource.kt` — 전체 미디어 쿼리 (날짜 내림차순)
+- [x] `MediaRepository.kt`
+- [x] `AlbumRepository.kt`
+- [x] Hilt 모듈: `MediaStoreModule.kt`, `RepositoryModule.kt`
 
 ### [P1-4] Photo Main Screen ⏳
 - [ ] `PhotoMainViewModel.kt` — 날짜별 그룹핑 StateFlow
@@ -114,4 +114,4 @@
 ---
 
 ## 마지막 업데이트
-2026-04-11 | P1-2 권한 요청 흐름 완료 (AndroidManifest 권한 선언, PermissionScreen, GalleryNavHost 시작 분기)
+2026-04-11 | P1-3 MediaStore 데이터 소스 완료 (MediaItem/Album 도메인 모델, MediaStoreDataSource, MediaRepository, AlbumRepository, Hilt 모듈)
