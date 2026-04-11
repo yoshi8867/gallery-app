@@ -129,4 +129,7 @@ dependencies {
 
     // Material Icons Extended
     implementation(libs.androidx.compose.material.icons.extended)
+
+    // Accompanist Permissions
+    implementation(libs.accompanist.permissions)
 }

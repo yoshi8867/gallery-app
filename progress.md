@@ -3,7 +3,7 @@
 ---
 
 ## 전체 진행도
-██░░░░░░░░░░░░░░░░░░ 7% (2/28)
+███░░░░░░░░░░░░░░░░░ 11% (3/28)
 
 ---
 
@@ -18,10 +18,10 @@
 - [x] `ui/navigation/` GalleryNavHost.kt
 - [x] `ui/component/` GalleryNavigationBar.kt
 
-### [P1-2] 권한 요청 흐름 ⏳
-- [ ] `READ_MEDIA_IMAGES` / `READ_MEDIA_VIDEO` (API 33+) / `READ_EXTERNAL_STORAGE` (API 29~32)
-- [ ] `ACCESS_MEDIA_LOCATION` (EXIF GPS 읽기)
-- [ ] PermissionScreen Composable (권한 요청 UI)
+### [P1-2] 권한 요청 흐름 ✅
+- [x] `READ_MEDIA_IMAGES` / `READ_MEDIA_VIDEO` (API 33+) / `READ_EXTERNAL_STORAGE` (API 29~32)
+- [x] `ACCESS_MEDIA_LOCATION` (EXIF GPS 읽기)
+- [x] PermissionScreen Composable (권한 요청 UI)
 
 ### [P1-3] MediaStore 데이터 소스 ⏳
 - [ ] `MediaItem.kt` 도메인 모델 (사진/동영상 공통)
@@ -114,4 +114,4 @@
 ---
 
 ## 마지막 업데이트
-2026-04-11 | P1-1 프로젝트 초기 세팅 완료 (의존성, 테마, Navigation, BottomBar)
+2026-04-11 | P1-2 권한 요청 흐름 완료 (AndroidManifest 권한 선언, PermissionScreen, GalleryNavHost 시작 분기)

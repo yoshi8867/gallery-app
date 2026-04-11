@@ -3,6 +3,9 @@ package com.yoshi0311.gallery.ui
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
+// ── 권한 스크린 ─────────────────────────────────────────────
+@Serializable data object PermissionScreen : NavKey
+
 // ── 바텀 탭 스크린 ──────────────────────────────────────────
 @Serializable data object PhotosScreen : NavKey
 @Serializable data object AlbumsScreen : NavKey
