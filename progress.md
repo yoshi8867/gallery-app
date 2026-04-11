@@ -3,7 +3,7 @@
 ---
 
 ## 전체 진행도
-████░░░░░░░░░░░░░░░░ 14% (4/28)
+█████░░░░░░░░░░░░░░░ 18% (5/28)
 
 ---
 
@@ -31,13 +31,13 @@
 - [x] `AlbumRepository.kt`
 - [x] Hilt 모듈: `MediaStoreModule.kt`, `RepositoryModule.kt`
 
-### [P1-4] Photo Main Screen ⏳
-- [ ] `PhotoMainViewModel.kt` — 날짜별 그룹핑 StateFlow
-- [ ] `PhotoMainScreen.kt` — LargeTopAppBar(Collapsing) + LazyColumn + StickyHeader
-- [ ] `MediaThumbnail.kt` — 동영상 배지 오버레이 포함
-- [ ] 핀치 줌: 1.5 / 3 / 4 / 7 / 11 / 20단 전환 (11·20단은 저해상도 썸네일)
-- [ ] 다중 선택 모드 (롱프레스) + `SelectionTopBar.kt` + SelectionActionBar
-- [ ] SearchBar 탭 → SearchScreen 이동
+### [P1-4] Photo Main Screen ✅
+- [x] `PhotoMainViewModel.kt` — 날짜별 그룹핑 StateFlow
+- [x] `PhotoMainScreen.kt` — LargeTopAppBar(Collapsing) + LazyColumn + StickyHeader
+- [x] `MediaThumbnail.kt` — 동영상 배지 오버레이 포함
+- [x] 핀치 줌: 1.5 / 3 / 4 / 7 / 11 / 20단 전환 (11·20단은 저해상도 썸네일)
+- [x] 다중 선택 모드 (롱프레스) + `SelectionTopBar.kt` + SelectionActionBar
+- [x] SearchBar 탭 → SearchScreen 이동
 
 ### [P1-5] Album List Screen ⏳
 - [ ] `AlbumListViewModel.kt`
@@ -114,4 +114,4 @@
 ---
 
 ## 마지막 업데이트
-2026-04-11 | P1-3 MediaStore 데이터 소스 완료 (MediaItem/Album 도메인 모델, MediaStoreDataSource, MediaRepository, AlbumRepository, Hilt 모듈)
+2026-04-11 | P1-4 Photo Main Screen 완료 (PhotoMainViewModel, PhotoMainScreen, MediaThumbnail, SelectionTopBar, GalleryNavHost 연결)

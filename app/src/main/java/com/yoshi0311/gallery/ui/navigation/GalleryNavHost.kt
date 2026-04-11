@@ -30,6 +30,7 @@ import com.yoshi0311.gallery.ui.TrashScreen
 import com.yoshi0311.gallery.ui.VideosScreen
 import com.yoshi0311.gallery.ui.component.GalleryNavigationBar
 import com.yoshi0311.gallery.ui.permission.PermissionScreen as PermissionScreenUI
+import com.yoshi0311.gallery.ui.photos.PhotoMainScreen
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -82,7 +83,14 @@ fun GalleryNavHost() {
                         )
                     }
                     entry<PhotosScreen> {
-                        PlaceholderScreen("사진 화면 (P1-4에서 구현 예정)")
+                        PhotoMainScreen(
+                            onNavigateToPhoto = { mediaId ->
+                                backStack.add(PhotoViewScreen(mediaId = mediaId))
+                            },
+                            onNavigateToSearch = {
+                                backStack.add(SearchScreen)
+                            },
+                        )
                     }
                     entry<AlbumsScreen> {
                         PlaceholderScreen("앨범 화면 (P1-5에서 구현 예정)")
