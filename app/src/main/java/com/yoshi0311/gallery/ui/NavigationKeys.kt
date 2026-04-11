@@ -27,6 +27,8 @@ import kotlinx.serialization.Serializable
 @Serializable data object SearchScreen : NavKey
 @Serializable data object FavoritesScreen : NavKey
 @Serializable data object TrashScreen : NavKey
+@Serializable data object LocationScreen : NavKey
 @Serializable data object MapScreen : NavKey
+@Serializable data object SettingsScreen : NavKey
 @Serializable data object StoryListScreen : NavKey
 @Serializable data class StoryViewScreen(val storyId: Long) : NavKey

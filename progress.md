@@ -114,4 +114,4 @@
 ---
 
 ## 마지막 업데이트
-2026-04-11 | P1-4 Photo Main Screen 완료 (PhotoMainViewModel, PhotoMainScreen, MediaThumbnail, SelectionTopBar, GalleryNavHost 연결)
+2026-04-11 | 기획 정합성 수정 — 탭 구조(사진/앨범/스토리/메뉴), MenuModalSheet, PhotoMain 세부(제목·일별 섹션·SearchBar·SelectionActionBar) 보정

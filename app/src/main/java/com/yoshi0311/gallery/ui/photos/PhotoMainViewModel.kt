@@ -77,10 +77,10 @@ class PhotoMainViewModel @Inject constructor(
         selectedIds = emptySet()
     }
 
-    // ── 날짜 그룹핑 ──────────────────────────────────────────────
+    // ── 날짜 그룹핑 (일별) ───────────────────────────────────────
     private fun List<MediaItem>.groupToSections(): List<MediaSection> {
         if (isEmpty()) return emptyList()
-        val fmt = SimpleDateFormat("yyyy년 M월", Locale.KOREAN)
+        val fmt = SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN)
         return groupBy { fmt.format(Date(it.dateTaken)) }
             .map { (label, items) -> MediaSection(dateLabel = label, items = items) }
     }
