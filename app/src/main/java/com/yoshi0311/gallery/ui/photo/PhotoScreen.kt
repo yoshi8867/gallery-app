@@ -16,7 +16,7 @@
 
 package com.yoshi0311.gallery.ui.photo
 
-import com.yoshi0311.gallery.ui.theme.MyApplicationTheme
+import com.yoshi0311.gallery.ui.theme.GalleryTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -92,7 +92,7 @@ internal fun PhotoScreen(
 @Preview(showBackground = true)
 @Composable
 private fun DefaultPreview() {
-    MyApplicationTheme {
+    GalleryTheme {
         PhotoScreen(listOf("Compose", "Room", "Kotlin"), onSave = {})
     }
 }
@@ -100,7 +100,7 @@ private fun DefaultPreview() {
 @Preview(showBackground = true, widthDp = 340)
 @Composable
 private fun PortraitPreview() {
-    MyApplicationTheme {
+    GalleryTheme {
         PhotoScreen(listOf("Compose", "Room", "Kotlin"), onSave = {})
     }
 }

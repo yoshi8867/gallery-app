@@ -1,23 +1,29 @@
-/*
- * Copyright (C) 2026 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.yoshi0311.gallery.ui
 
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
-@Serializable
-data object Main : NavKey
+// ── 바텀 탭 스크린 ──────────────────────────────────────────
+@Serializable data object PhotosScreen : NavKey
+@Serializable data object AlbumsScreen : NavKey
+@Serializable data object RecentsScreen : NavKey
+@Serializable data object VideosScreen : NavKey
+
+// ── 상세 스크린 ─────────────────────────────────────────────
+@Serializable data class AlbumViewScreen(
+    val albumId: Long,
+    val albumName: String
+) : NavKey
+
+@Serializable data class PhotoViewScreen(
+    val mediaId: Long,
+    val albumId: Long? = null
+) : NavKey
+
+// ── 기능 스크린 ─────────────────────────────────────────────
+@Serializable data object SearchScreen : NavKey
+@Serializable data object FavoritesScreen : NavKey
+@Serializable data object TrashScreen : NavKey
+@Serializable data object MapScreen : NavKey
+@Serializable data object StoryListScreen : NavKey
+@Serializable data class StoryViewScreen(val storyId: Long) : NavKey

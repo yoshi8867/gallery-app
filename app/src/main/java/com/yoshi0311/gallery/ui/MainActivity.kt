@@ -17,15 +17,12 @@
 package com.yoshi0311.gallery.ui
 
 import android.os.Bundle
-import com.yoshi0311.gallery.ui.theme.MyApplicationTheme
+import com.yoshi0311.gallery.ui.navigation.GalleryNavHost
+import com.yoshi0311.gallery.ui.theme.GalleryTheme
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,13 +37,8 @@ class MainActivity : ComponentActivity() {
         )
         super.onCreate(savedInstanceState)
         setContent {
-            MyApplicationTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    MainNavigation()
-                }
+            GalleryTheme {
+                GalleryNavHost()
             }
         }
     }

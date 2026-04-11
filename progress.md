@@ -3,20 +3,20 @@
 ---
 
 ## 전체 진행도
-░░░░░░░░░░░░░░░░░░░░ 0% (0/28)
+██░░░░░░░░░░░░░░░░░░ 7% (2/28)
 
 ---
 
 ## Phase 1 — 기본 기능
 
-### [P1-1] 프로젝트 초기 세팅 ⏳
-- [ ] architecture-templates base → customizer.sh 적용 (`com.yoshi0311.gallery`, `Gallery`)
-- [ ] `build.gradle.kts` 의존성 추가: Hilt, Navigation, Room + KSP, Coil, ExoPlayer(Media3), secrets-gradle-plugin
-- [ ] `GalleryApplication.kt` (Hilt @HiltAndroidApp)
-- [ ] `MainActivity.kt` (NavHost 호스팅)
-- [ ] `ui/theme/` Color.kt / Type.kt / Theme.kt (Material You Purple 시안 B)
-- [ ] `ui/navigation/` Screen.kt + GalleryNavHost.kt
-- [ ] `ui/component/` GalleryNavigationBar.kt
+### [P1-1] 프로젝트 초기 세팅 ✅
+- [x] architecture-templates base → customizer.sh 적용 (`com.yoshi0311.gallery`, `Gallery`)
+- [x] `build.gradle.kts` 의존성 추가: Hilt, Navigation, Room + KSP, Coil, ExoPlayer(Media3), secrets-gradle-plugin
+- [x] `GalleryApplication.kt` (Hilt @HiltAndroidApp)
+- [x] `MainActivity.kt` (NavHost 호스팅)
+- [x] `ui/theme/` Color.kt / Type.kt / Theme.kt (Material You Purple 시안 B)
+- [x] `ui/navigation/` GalleryNavHost.kt
+- [x] `ui/component/` GalleryNavigationBar.kt
 
 ### [P1-2] 권한 요청 흐름 ⏳
 - [ ] `READ_MEDIA_IMAGES` / `READ_MEDIA_VIDEO` (API 33+) / `READ_EXTERNAL_STORAGE` (API 29~32)
@@ -114,4 +114,4 @@
 ---
 
 ## 마지막 업데이트
-2026-04-10 13:47 | 저장소 초기화 완료, 구현 준비 중
+2026-04-11 | P1-1 프로젝트 초기 세팅 완료 (의존성, 테마, Navigation, BottomBar)
