@@ -3,7 +3,7 @@
 ---
 
 ## 전체 진행도
-███████░░░░░░░░░░░░░ 25% (7/28)
+█████████░░░░░░░░░░░ 32% (9/28)
 
 ---
 
@@ -44,12 +44,12 @@
 - [x] `AlbumListScreen.kt` — LazyVerticalGrid 1·2·3단 + 정렬 칩 (이름순/최신순/항목 수순)
 - [x] `AlbumCard.kt` Composable
 
-### [P1-6] Album View Screen ⏳
-- [ ] `AlbumViewViewModel.kt`
-- [ ] `AlbumViewScreen.kt` — LazyVerticalGrid + AnimatedVisibility 서랍 패널
-- [ ] 서랍 열림/닫힘 제스처 (우측 엣지 스와이프)
-- [ ] 열 수 5단계 (닫힘: 1.5/3/4/7/12단, 열림: 1.5/2/3/5/9단)
-- [ ] 다중 선택 모드 (롱프레스)
+### [P1-6] Album View Screen ✅
+- [x] `AlbumViewViewModel.kt`
+- [x] `AlbumViewScreen.kt` — LazyVerticalGrid + AnimatedVisibility 서랍 패널
+- [x] 서랍 열림/닫힘 제스처 (우측 스와이프 열림, 좌측 스와이프 닫힘)
+- [x] 열 수 5단계 (닫힘: 2/3/4/7/12단, 열림: 2/3/5/9단)
+- [x] 다중 선택 모드 (롱프레스)
 
 ### [P1-7] Photo View Screen ⏳
 - [ ] `PhotoViewViewModel.kt`
@@ -114,4 +114,4 @@
 ---
 
 ## 마지막 업데이트
-2026-04-12 | P1-5 완료 — AlbumListScreen (CenterAlignedTopAppBar + 정렬 칩 + 핀치 줌 + AlbumCard)
+2026-04-12 | P1-6 완료 — AlbumViewScreen (좌측 드로어 + 앨범 전환 + 핀치 줌 + 다중 선택)

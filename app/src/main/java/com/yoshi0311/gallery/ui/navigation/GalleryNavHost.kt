@@ -22,6 +22,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.yoshi0311.gallery.ui.component.GalleryNavigationBar
 import com.yoshi0311.gallery.ui.screen.albumlist.AlbumListScreen
+import com.yoshi0311.gallery.ui.screen.albumview.AlbumViewScreen
 import com.yoshi0311.gallery.ui.screen.menu.MenuModalSheet
 import com.yoshi0311.gallery.ui.screen.permission.PermissionScreen as PermissionScreenUI
 import com.yoshi0311.gallery.ui.screen.photomain.PhotoMainScreen
@@ -115,7 +116,18 @@ fun GalleryNavHost() {
                         PlaceholderScreen("스토리 리스트 (P3에서 구현 예정)")
                     }
                     entry<AlbumViewScreen> {
-                        PlaceholderScreen("앨범 상세 (P1-6에서 구현 예정)")
+                        AlbumViewScreen(
+                            albumId = it.albumId,
+                            albumName = it.albumName,
+                            onBack = { backStack.removeLastOrNull() },
+                            onNavigateToPhoto = { mediaId ->
+                                backStack.add(PhotoViewScreen(mediaId = mediaId, albumId = it.albumId))
+                            },
+                            onNavigateToAlbum = { albumId, albumName ->
+                                backStack.removeLastOrNull()
+                                backStack.add(AlbumViewScreen(albumId = albumId, albumName = albumName))
+                            },
+                        )
                     }
                     entry<PhotoViewScreen> {
                         PlaceholderScreen("사진 뷰어 (P1-7에서 구현 예정)")
