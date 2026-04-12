@@ -27,6 +27,7 @@ class AlbumRepositoryImpl @Inject constructor(
                         name = bucketItems.first().bucketName,
                         coverUri = bucketItems.first().uri,
                         count = bucketItems.size,
+                        latestDate = bucketItems.maxOf { it.dateTaken },
                     )
                 }
                 .sortedBy { it.name }

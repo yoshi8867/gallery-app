@@ -3,7 +3,7 @@
 ---
 
 ## 전체 진행도
-█████░░░░░░░░░░░░░░░ 18% (5/28)
+███████░░░░░░░░░░░░░ 25% (7/28)
 
 ---
 
@@ -39,10 +39,10 @@
 - [x] 다중 선택 모드 (롱프레스) + `SelectionTopBar.kt` + SelectionActionBar
 - [x] SearchBar 탭 → SearchScreen 이동
 
-### [P1-5] Album List Screen ⏳
-- [ ] `AlbumListViewModel.kt`
-- [ ] `AlbumListScreen.kt` — LazyVerticalGrid 1·2·3단 + 정렬 칩 (이름순/최신순/항목 수순)
-- [ ] `AlbumCard.kt` Composable
+### [P1-5] Album List Screen ✅
+- [x] `AlbumListViewModel.kt`
+- [x] `AlbumListScreen.kt` — LazyVerticalGrid 1·2·3단 + 정렬 칩 (이름순/최신순/항목 수순)
+- [x] `AlbumCard.kt` Composable
 
 ### [P1-6] Album View Screen ⏳
 - [ ] `AlbumViewViewModel.kt`
@@ -114,4 +114,4 @@
 ---
 
 ## 마지막 업데이트
-2026-04-11 | 기획 정합성 수정 — 탭 구조(사진/앨범/스토리/메뉴), MenuModalSheet, PhotoMain 세부(제목·일별 섹션·SearchBar·SelectionActionBar) 보정
+2026-04-12 | P1-5 완료 — AlbumListScreen (CenterAlignedTopAppBar + 정렬 칩 + 핀치 줌 + AlbumCard)
