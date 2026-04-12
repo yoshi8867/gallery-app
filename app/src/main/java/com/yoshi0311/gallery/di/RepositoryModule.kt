@@ -1,4 +1,4 @@
-package com.yoshi0311.gallery.data.di
+package com.yoshi0311.gallery.di
 
 import com.yoshi0311.gallery.data.repository.AlbumRepository
 import com.yoshi0311.gallery.data.repository.AlbumRepositoryImpl

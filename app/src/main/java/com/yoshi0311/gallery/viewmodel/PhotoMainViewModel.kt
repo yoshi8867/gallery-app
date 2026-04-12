@@ -1,12 +1,12 @@
-package com.yoshi0311.gallery.ui.photos
+package com.yoshi0311.gallery.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yoshi0311.gallery.data.model.MediaItem
 import com.yoshi0311.gallery.data.repository.MediaRepository
-import com.yoshi0311.gallery.domain.model.MediaItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -40,13 +40,13 @@ class PhotoMainViewModel @Inject constructor(
     var columnCount by mutableStateOf(4)
         private set
 
-    /** 핀치 인 — 컬럼 수 줄임(아이템 확대) */
+    /** 핀치 아웃 — 컬럼 수 줄임(아이템 확대) */
     fun zoomIn() {
         val idx = columnLevels.indexOf(columnCount)
         if (idx > 0) columnCount = columnLevels[idx - 1]
     }
 
-    /** 핀치 아웃 — 컬럼 수 늘림(아이템 축소) */
+    /** 핀치 인 — 컬럼 수 늘림(아이템 축소) */
     fun zoomOut() {
         val idx = columnLevels.indexOf(columnCount)
         if (idx < columnLevels.lastIndex) columnCount = columnLevels[idx + 1]

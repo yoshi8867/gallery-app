@@ -1,7 +1,7 @@
 package com.yoshi0311.gallery.data.repository
 
-import com.yoshi0311.gallery.data.source.MediaStoreDataSource
-import com.yoshi0311.gallery.domain.model.MediaItem
+import com.yoshi0311.gallery.data.local.mediastore.MediaStoreDataSource
+import com.yoshi0311.gallery.data.model.MediaItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

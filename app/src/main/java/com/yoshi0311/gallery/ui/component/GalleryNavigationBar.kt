@@ -15,9 +15,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.NavKey
-import com.yoshi0311.gallery.ui.AlbumsScreen
-import com.yoshi0311.gallery.ui.PhotosScreen
-import com.yoshi0311.gallery.ui.StoryListScreen
+import com.yoshi0311.gallery.ui.navigation.AlbumsScreen
+import com.yoshi0311.gallery.ui.navigation.PhotosScreen
+import com.yoshi0311.gallery.ui.navigation.StoryListScreen
 
 // 0=사진, 1=앨범, 2=스토리, 3=메뉴
 @Composable

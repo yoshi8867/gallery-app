@@ -20,24 +20,10 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.yoshi0311.gallery.ui.AlbumViewScreen
-import com.yoshi0311.gallery.ui.AlbumsScreen
-import com.yoshi0311.gallery.ui.FavoritesScreen
-import com.yoshi0311.gallery.ui.LocationScreen
-import com.yoshi0311.gallery.ui.MapScreen
-import com.yoshi0311.gallery.ui.PermissionScreen
-import com.yoshi0311.gallery.ui.PhotoViewScreen
-import com.yoshi0311.gallery.ui.PhotosScreen
-import com.yoshi0311.gallery.ui.RecentsScreen
-import com.yoshi0311.gallery.ui.SearchScreen
-import com.yoshi0311.gallery.ui.SettingsScreen
-import com.yoshi0311.gallery.ui.StoryListScreen
-import com.yoshi0311.gallery.ui.TrashScreen
-import com.yoshi0311.gallery.ui.VideosScreen
 import com.yoshi0311.gallery.ui.component.GalleryNavigationBar
-import com.yoshi0311.gallery.ui.menu.MenuModalSheet
-import com.yoshi0311.gallery.ui.permission.PermissionScreen as PermissionScreenUI
-import com.yoshi0311.gallery.ui.photos.PhotoMainScreen
+import com.yoshi0311.gallery.ui.screen.menu.MenuModalSheet
+import com.yoshi0311.gallery.ui.screen.permission.PermissionScreen as PermissionScreenUI
+import com.yoshi0311.gallery.ui.screen.photomain.PhotoMainScreen
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

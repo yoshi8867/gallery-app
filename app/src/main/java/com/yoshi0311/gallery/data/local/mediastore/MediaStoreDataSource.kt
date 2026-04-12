@@ -1,11 +1,11 @@
-package com.yoshi0311.gallery.data.source
+package com.yoshi0311.gallery.data.local.mediastore
 
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.database.ContentObserver
 import android.os.Build
 import android.provider.MediaStore
-import com.yoshi0311.gallery.domain.model.MediaItem
+import com.yoshi0311.gallery.data.model.MediaItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow

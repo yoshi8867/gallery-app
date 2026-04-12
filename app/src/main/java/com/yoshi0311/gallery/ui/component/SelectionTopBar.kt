@@ -1,4 +1,4 @@
-package com.yoshi0311.gallery.ui.photos
+package com.yoshi0311.gallery.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

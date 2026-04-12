@@ -1,4 +1,4 @@
-package com.yoshi0311.gallery.ui
+package com.yoshi0311.gallery.ui.navigation
 
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable

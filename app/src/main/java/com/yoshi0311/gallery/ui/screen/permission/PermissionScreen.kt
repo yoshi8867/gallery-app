@@ -1,4 +1,4 @@
-package com.yoshi0311.gallery.ui.permission
+package com.yoshi0311.gallery.ui.screen.permission
 
 import android.Manifest
 import android.content.Intent

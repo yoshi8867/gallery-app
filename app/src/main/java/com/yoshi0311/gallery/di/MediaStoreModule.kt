@@ -1,4 +1,4 @@
-package com.yoshi0311.gallery.data.di
+package com.yoshi0311.gallery.di
 
 import android.content.ContentResolver
 import android.content.Context

@@ -40,7 +40,7 @@
         android:name=".GalleryApplication"
         tools:targetApi="31">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.Gallery">

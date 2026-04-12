@@ -1,4 +1,4 @@
-package com.yoshi0311.gallery.domain.model
+package com.yoshi0311.gallery.data.model
 
 import android.net.Uri
 

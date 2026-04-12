@@ -1,4 +1,4 @@
-package com.yoshi0311.gallery.ui.menu
+package com.yoshi0311.gallery.ui.screen.menu
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -33,12 +33,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
-import com.yoshi0311.gallery.ui.FavoritesScreen
-import com.yoshi0311.gallery.ui.LocationScreen
-import com.yoshi0311.gallery.ui.RecentsScreen
-import com.yoshi0311.gallery.ui.SettingsScreen
-import com.yoshi0311.gallery.ui.TrashScreen
-import com.yoshi0311.gallery.ui.VideosScreen
+import com.yoshi0311.gallery.ui.navigation.FavoritesScreen
+import com.yoshi0311.gallery.ui.navigation.LocationScreen
+import com.yoshi0311.gallery.ui.navigation.RecentsScreen
+import com.yoshi0311.gallery.ui.navigation.SettingsScreen
+import com.yoshi0311.gallery.ui.navigation.TrashScreen
+import com.yoshi0311.gallery.ui.navigation.VideosScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

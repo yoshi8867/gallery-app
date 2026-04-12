@@ -1,4 +1,4 @@
-package com.yoshi0311.gallery.ui.photos
+package com.yoshi0311.gallery.ui.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.yoshi0311.gallery.domain.model.MediaItem
+import com.yoshi0311.gallery.data.model.MediaItem
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
