@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +37,7 @@ fun MediaThumbnail(
     modifier: Modifier = Modifier,
     thumbnailPadding: Dp = 1.dp,
     bottomBadge: String? = null,
+    showFavoriteHeart: Boolean = false,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
@@ -83,6 +85,18 @@ fun MediaThumbnail(
                     .padding(4.dp)
                     .background(Color.Black.copy(alpha = 0.55f), RoundedCornerShape(4.dp))
                     .padding(horizontal = 4.dp, vertical = 2.dp),
+            )
+        }
+
+        // 즐겨찾기 하트 배지 (우상단, 선택 모드가 아닐 때만)
+        if (showFavoriteHeart && !inSelectionMode) {
+            Icon(
+                imageVector = Icons.Filled.Favorite,
+                contentDescription = null,
+                tint = Color(0xFFE91E63),
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(4.dp),
             )
         }
 

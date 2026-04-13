@@ -91,4 +91,8 @@ class PhotoViewViewModel @Inject constructor(
     fun moveToTrash(mediaId: Long) {
         viewModelScope.launch { trashRepository.moveToTrash(mediaId) }
     }
+
+    fun restoreFromTrash(mediaId: Long) {
+        viewModelScope.launch { trashRepository.restoreFromTrash(setOf(mediaId)) }
+    }
 }

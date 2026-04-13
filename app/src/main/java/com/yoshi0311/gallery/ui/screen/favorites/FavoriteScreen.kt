@@ -36,5 +36,6 @@ fun FavoriteScreen(
         onFavorite = { viewModel.removeSelectedFromFavorites() },
         onShare = { shareMediaItems(context, items.filter { it.id in viewModel.selectedIds }) },
         onDelete = { viewModel.moveSelectedToTrash() },
+        showFavoriteHeart = true,
     )
 }

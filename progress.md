@@ -3,7 +3,7 @@
 ---
 
 ## 전체 진행도
-████████████████░░░░ 80% (13/16)
+█████████████████░░░ 85% (14/16) + 테마 개선
 
 ---
 
@@ -73,20 +73,22 @@
 
 ## Phase 2 — 부가 기능
 
-### [P2-1] 즐겨찾기 ⏳
+### [P2-1] 즐겨찾기 ✅
 - [x] `FavoriteEntity.kt` + `FavoriteDao.kt` + `GalleryDatabase.kt`
 - [x] `FavoriteRepository.kt`
 - [x] `DatabaseModule.kt`
 - [x] `FavoriteViewModel.kt`
 - [x] `FavoriteScreen.kt` — `MediaGridScreen` 공용 컴포넌트 재사용 (하단 내비게이션 없음, 스티키 헤더 없음, 단순 그리드)
 - [x] Photo View 하트 버튼 연동
+- [x] 즐겨찾기 스크린 썸네일 우상단 빨간 하트 표시 (columnCount ≤ 3 단계에서만, 선택 모드 시 숨김)
 
-### [P2-2] 휴지통 ⏳
+### [P2-2] 휴지통 ✅
 - [x] `TrashRepository.kt` (IS_TRASHED 쿼리)
 - [x] `TrashViewModel.kt`
 - [x] `TrashScreen.kt` — `MediaGridScreen` 공용 컴포넌트 재사용 (하단 내비게이션 없음, 스티키 헤더 없음, 단순 그리드)
 - [x] 실제로 삭제를 수행하진 않고 그런 흉내만 냄.
-- [x] 방금 삭제한 파일 기준 30일 후에 삭제되는 것처럼 썸네일 하단에 '30일'이라고 표시함. 삭제한 지 하루 지난 건 29일로. (하지만 실제로 30일이 지난다고 해서 파일이 삭제되지는 않음.) 
+- [x] 방금 삭제한 파일 기준 30일 후에 삭제되는 것처럼 썸네일 하단에 '30일'이라고 표시함. 삭제한 지 하루 지난 건 29일로. (하지만 실제로 30일이 지난다고 해서 파일이 삭제되지는 않음.)
+- [x] 휴지통 포토뷰 하단 메뉴 → 복원 + 삭제 버튼만 표시 (복원만 동작, 삭제는 Toast)
 
 ### [P2-3] 공유 기능 ✅
 - [x] Android Sharesheet 연동 (단일/다중 선택 공유)
@@ -120,6 +122,8 @@
 ### [P2-9] `PhotoMainScreen.kt`과 `AlbumViewScreen.kt`에서 다중 선택 시 기능 ✅
 - [x] 다중 선택 후 뒤로가기 버튼(시스템 버튼)을 눌렀을 때 선택 취소 (`BackHandler` 적용)
 - [x] 다중 선택 시 하단 메뉴(사진/앨범/스토리/메뉴) 사라짐 — `onSelectionModeChange` 콜백으로 GalleryNavHost에 상태 전달
+- [x] `MediaGridScreen.kt` 사용 화면(즐겨찾기·휴지통·최근·동영상)에서도 다중 선택 중 뒤로가기 시 선택 취소 (`BackHandler` 추가)
+- [x] `AlbumViewScreen.kt` 다중 선택 즐겨찾기/삭제 버튼 동작 구현 (`AlbumViewViewModel`에 `FavoriteRepository` 주입)
 
 ### [P2-10] `AlbumViewScreen.kt`에서 손가락 두 개가 닿았을 때 ✅
 - [x] 스와이프 핸들러에 `isMultiTouch` 플래그 추가 — 두 손가락 감지 시 드로어 열기/닫기 비활성화
@@ -145,6 +149,8 @@
 ---
 
 ## 마지막 업데이트
+2026-04-14 | 테마 개선 — `Theme.kt` surface·background·surfaceContainer 계열 흰색 고정 (다이나믹 컬러 회색 틴트 제거)
+2026-04-14 | P2-1·P2-2 마무리 — 즐겨찾기 하트배지·휴지통포토뷰하단메뉴·MediaGridScreen BackHandler·AlbumView 즐겨찾기/삭제 구현
 2026-04-14 | P2-3·P2-8·P2-9·P2-10·P2-11 완료 — 공유·핀치줌버그·뒤로가기선택취소·내비바숨김·두손가락드로어방지·화면전환속도
 2026-04-13 | P2-5 완료(부분) — LocationScreen 동작 확인. MapScreen은 Google Maps API 키 필요로 추후 개발 미룸
 2026-04-13 | P1-9 완료 — VideoScreen·RecentsScreen·MediaGridScreen 공용 컴포넌트·SelectionActionBar 더보기·NavigationBar 숨김

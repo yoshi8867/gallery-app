@@ -1,5 +1,6 @@
 package com.yoshi0311.gallery.ui.component
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -57,6 +58,8 @@ fun MediaGridScreen(
     selectionBottomBar: (@Composable () -> Unit)? = null,
     /** 썸네일 하단 우측에 표시할 텍스트 배지 (예: 휴지통 남은 일수). null이면 미표시 */
     getItemBadge: ((MediaItem) -> String?)? = null,
+    /** 즐겨찾기 화면에서 썸네일 우상단에 빨간 하트 표시. columnCount <= 3일 때만 실제 표시됨 */
+    showFavoriteHeart: Boolean = false,
 ) {
     // columnLevels 전달 시 단계 인덱스 기반, 미전달 시 고정 1dp
     val thumbnailPadding = if (columnLevels.isNotEmpty()) {
@@ -69,6 +72,9 @@ fun MediaGridScreen(
     } else {
         1.dp
     }
+
+    // 다중 선택 중 시스템 뒤로가기 → 선택 해제
+    BackHandler(enabled = selectionMode) { onExitSelection() }
 
     Scaffold(
         topBar = {
@@ -186,6 +192,7 @@ fun MediaGridScreen(
                                 modifier = Modifier.weight(1f),
                                 thumbnailPadding = thumbnailPadding,
                                 bottomBadge = getItemBadge?.invoke(item),
+                                showFavoriteHeart = showFavoriteHeart && columnCount <= 3,
                                 onClick = { onItemClick(item) },
                                 onLongClick = { onItemLongClick(item) },
                             )

@@ -146,11 +146,11 @@ fun AlbumViewScreen(
         bottomBar = {
             if (selectionMode) {
                 SelectionActionBar(
-                    onFavorite = { /* TODO: AlbumViewViewModel에 즐겨찾기 추가 */ },
+                    onFavorite = { viewModel.addSelectedToFavorites() },
                     onShare = {
                         shareMediaItems(context, mediaItems.filter { it.id in selectedIds })
                     },
-                    onDelete = { /* TODO: AlbumViewViewModel에 휴지통 추가 */ },
+                    onDelete = { viewModel.moveSelectedToTrash() },
                 )
             }
         },

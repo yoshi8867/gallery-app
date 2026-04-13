@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.yoshi0311.gallery.data.model.Album
 import com.yoshi0311.gallery.data.model.MediaItem
 import com.yoshi0311.gallery.data.repository.AlbumRepository
+import com.yoshi0311.gallery.data.repository.FavoriteRepository
 import com.yoshi0311.gallery.data.repository.MediaRepository
 import com.yoshi0311.gallery.data.repository.TrashRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,12 +19,14 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AlbumViewViewModel @Inject constructor(
     private val mediaRepository: MediaRepository,
     private val albumRepository: AlbumRepository,
+    private val favoriteRepository: FavoriteRepository,
     private val trashRepository: TrashRepository,
 ) : ViewModel() {
 
@@ -119,5 +122,19 @@ class AlbumViewViewModel @Inject constructor(
     fun exitSelectionMode() {
         selectionMode = false
         selectedIds = emptySet()
+    }
+
+    fun addSelectedToFavorites() {
+        viewModelScope.launch {
+            favoriteRepository.addFavorites(selectedIds)
+            exitSelectionMode()
+        }
+    }
+
+    fun moveSelectedToTrash() {
+        viewModelScope.launch {
+            trashRepository.moveAllToTrash(selectedIds)
+            exitSelectionMode()
+        }
     }
 }

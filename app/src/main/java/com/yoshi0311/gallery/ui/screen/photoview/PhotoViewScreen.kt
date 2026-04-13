@@ -33,6 +33,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.ScreenRotation
 import androidx.compose.material.icons.filled.VolumeOff
@@ -233,32 +234,50 @@ fun PhotoViewScreen(
 //                        scope.launch { pagerState.scrollToPage(idx) }
 //                    },
 //                )
-                BottomActionBar(
-                    isFavorite = currentMedia?.id?.let { it in favoriteIds } ?: false,
-                    onFavorite = { viewModel.toggleFavorite(currentMedia?.id ?: 0L) },
-                    onEdit = {
-                        Toast.makeText(context, "추후 구현 예정입니다.", Toast.LENGTH_SHORT).show()
-                    },
-                    onAI = {
-                        Toast.makeText(context, "추후 구현 예정입니다.", Toast.LENGTH_SHORT).show()
-                    },
-                    onShare = {
-                        currentMedia?.let { media ->
-                            val intent = Intent(Intent.ACTION_SEND).apply {
-                                type = media.mimeType.ifEmpty { "*/*" }
-                                putExtra(Intent.EXTRA_STREAM, media.uri)
-                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                if (fromTrash) {
+                    TrashViewBottomBar(
+                        onRestore = {
+                            currentMedia?.id?.let { id ->
+                                viewModel.restoreFromTrash(id)
+                                onBack()
                             }
-                            context.startActivity(Intent.createChooser(intent, null))
-                        }
-                    },
-                    onDelete = {
-                        currentMedia?.id?.let { id ->
-                            viewModel.moveToTrash(id)
-                            onBack()
-                        }
-                    },
-                )
+                        },
+                        onDelete = {
+                            Toast.makeText(
+                                context,
+                                "안전을 위해서, 실제 삭제 기능은 생략♡",
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                        },
+                    )
+                } else {
+                    BottomActionBar(
+                        isFavorite = currentMedia?.id?.let { it in favoriteIds } ?: false,
+                        onFavorite = { viewModel.toggleFavorite(currentMedia?.id ?: 0L) },
+                        onEdit = {
+                            Toast.makeText(context, "추후 구현 예정입니다.", Toast.LENGTH_SHORT).show()
+                        },
+                        onAI = {
+                            Toast.makeText(context, "추후 구현 예정입니다.", Toast.LENGTH_SHORT).show()
+                        },
+                        onShare = {
+                            currentMedia?.let { media ->
+                                val intent = Intent(Intent.ACTION_SEND).apply {
+                                    type = media.mimeType.ifEmpty { "*/*" }
+                                    putExtra(Intent.EXTRA_STREAM, media.uri)
+                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                }
+                                context.startActivity(Intent.createChooser(intent, null))
+                            }
+                        },
+                        onDelete = {
+                            currentMedia?.id?.let { id ->
+                                viewModel.moveToTrash(id)
+                                onBack()
+                            }
+                        },
+                    )
+                }
             }
         }
     }
@@ -488,6 +507,31 @@ private fun ThumbnailStrip(
                     )
                 }
             }
+        }
+    }
+}
+
+// ── TrashViewBottomBar (휴지통 포토뷰용: 복원 + 삭제) ──────────
+@Composable
+private fun TrashViewBottomBar(
+    onRestore: () -> Unit,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface)
+            .navigationBarsPadding()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        IconButton(onClick = onRestore) {
+            Icon(Icons.Default.Restore, contentDescription = "복원")
+        }
+        IconButton(onClick = onDelete) {
+            Icon(Icons.Default.Delete, contentDescription = "삭제")
         }
     }
 }
