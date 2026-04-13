@@ -122,6 +122,7 @@ dependencies {
     // Coil (이미지 로딩)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+    implementation(libs.coil.video)
 
     // Media3 / ExoPlayer (동영상 재생)
     implementation(libs.androidx.media3.exoplayer)

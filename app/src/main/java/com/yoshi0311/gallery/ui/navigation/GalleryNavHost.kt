@@ -26,6 +26,7 @@ import com.yoshi0311.gallery.ui.screen.albumview.AlbumViewScreen
 import com.yoshi0311.gallery.ui.screen.menu.MenuModalSheet
 import com.yoshi0311.gallery.ui.screen.permission.PermissionScreen as PermissionScreenUI
 import com.yoshi0311.gallery.ui.screen.photomain.PhotoMainScreen
+import com.yoshi0311.gallery.ui.screen.photoview.PhotoViewScreen as PhotoViewScreenUI
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -52,7 +53,7 @@ fun GalleryNavHost() {
     Scaffold(
         bottomBar = {
             val current = backStack.lastOrNull()
-            if (current != null && current !is PermissionScreen) {
+            if (current != null && current !is PermissionScreen && current !is PhotoViewScreen) {
                 // 현재 화면 기반으로 활성 탭 결정
                 val selectedTabIndex = when {
                     showMenuSheet -> 3
@@ -79,7 +80,9 @@ fun GalleryNavHost() {
             }
         },
     ) { innerPadding ->
-        Box(Modifier.padding(innerPadding)) {
+        // PhotoViewScreen은 자체적으로 인셋을 처리하므로 innerPadding 미적용
+        val isPhotoView = backStack.lastOrNull() is PhotoViewScreen
+        Box(if (isPhotoView) Modifier.fillMaxSize() else Modifier.padding(innerPadding)) {
             NavDisplay(
                 backStack = backStack,
                 onBack = { backStack.removeLastOrNull() },
@@ -130,7 +133,11 @@ fun GalleryNavHost() {
                         )
                     }
                     entry<PhotoViewScreen> {
-                        PlaceholderScreen("사진 뷰어 (P1-7에서 구현 예정)")
+                        PhotoViewScreenUI(
+                            mediaId = it.mediaId,
+                            albumId = it.albumId,
+                            onBack = { backStack.removeLastOrNull() },
+                        )
                     }
                     entry<SearchScreen> {
                         PlaceholderScreen("검색 화면 (P2-4에서 구현 예정)")

@@ -82,6 +82,7 @@ fun PhotoMainScreen(
                             )
                         },
                         scrollBehavior = scrollBehavior,
+                        modifier = Modifier.padding(vertical = 40.dp),
                     )
                 }
             },
