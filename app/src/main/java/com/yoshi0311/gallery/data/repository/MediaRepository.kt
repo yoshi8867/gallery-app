@@ -13,6 +13,9 @@ interface MediaRepository {
 
     /** 특정 앨범(버킷) 내 미디어 */
     fun getMediaByAlbum(albumId: Long): Flow<List<MediaItem>>
+
+    /** 동영상만 — 촬영일 내림차순 */
+    fun getAllVideos(): Flow<List<MediaItem>>
 }
 
 @Singleton
@@ -27,4 +30,7 @@ class MediaRepositoryImpl @Inject constructor(
         dataSource.observeAllMedia().map { items ->
             items.filter { it.bucketId == albumId }
         }
+
+    override fun getAllVideos(): Flow<List<MediaItem>> =
+        dataSource.observeAllMedia().map { items -> items.filter { it.isVideo } }
 }

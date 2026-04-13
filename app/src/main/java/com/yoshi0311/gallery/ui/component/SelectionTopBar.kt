@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -52,6 +53,7 @@ fun SelectionActionBar(
     onFavorite: () -> Unit,
     onShare: () -> Unit,
     onDelete: () -> Unit,
+    onMore: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -79,6 +81,11 @@ fun SelectionActionBar(
                 icon = Icons.Default.Delete,
                 label = "삭제",
                 onClick = onDelete,
+            )
+            SelectionActionItem(
+                icon = Icons.Default.MoreVert,
+                label = "더보기",
+                onClick = onMore,
             )
         }
     }

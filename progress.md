@@ -74,12 +74,14 @@
 - [ ] `FavoriteEntity.kt` + `FavoriteDao.kt` + `GalleryDatabase.kt`
 - [ ] `FavoriteRepository.kt`
 - [ ] `DatabaseModule.kt`
-- [ ] `FavoriteViewModel.kt` + `FavoriteScreen.kt`
+- [ ] `FavoriteViewModel.kt`
+- [ ] `FavoriteScreen.kt` — `MediaGridScreen` 공용 컴포넌트 재사용 (하단 내비게이션 없음, 스티키 헤더 없음, 단순 그리드)
 - [ ] Photo View 하트 버튼 연동
 
 ### [P2-2] 휴지통 ⏳
 - [ ] `TrashRepository.kt` (IS_TRASHED 쿼리)
-- [ ] `TrashViewModel.kt` + `TrashScreen.kt`
+- [ ] `TrashViewModel.kt`
+- [ ] `TrashScreen.kt` — `MediaGridScreen` 공용 컴포넌트 재사용 (하단 내비게이션 없음, 스티키 헤더 없음, 단순 그리드)
 - [ ] API 30 미만 안내 문구 분기
 
 ### [P2-3] 공유 기능 ⏳
@@ -114,5 +116,6 @@
 ---
 
 ## 마지막 업데이트
+2026-04-13 | P1-9 구현 중 — VideoScreen·RecentsScreen + MediaGridScreen 공용 컴포넌트 + SelectionActionBar 더보기 버튼 추가
 2026-04-13 | P1-7 완료 — PhotoViewScreen (HorizontalPager + ZoomableImage + ThumbnailStrip + 상세정보 BottomSheet + BottomActionBar)
 2026-04-13 | P1-8 완료 — VideoOverlay (ExoPlayer + 뮤트 버튼)

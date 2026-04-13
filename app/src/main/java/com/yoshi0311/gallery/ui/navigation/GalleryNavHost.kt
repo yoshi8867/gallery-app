@@ -27,6 +27,8 @@ import com.yoshi0311.gallery.ui.screen.menu.MenuModalSheet
 import com.yoshi0311.gallery.ui.screen.permission.PermissionScreen as PermissionScreenUI
 import com.yoshi0311.gallery.ui.screen.photomain.PhotoMainScreen
 import com.yoshi0311.gallery.ui.screen.photoview.PhotoViewScreen as PhotoViewScreenUI
+import com.yoshi0311.gallery.ui.screen.recents.RecentsScreen as RecentsScreenUI
+import com.yoshi0311.gallery.ui.screen.video.VideoScreen as VideoScreenUI
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -50,21 +52,27 @@ fun GalleryNavHost() {
     val backStack = rememberNavBackStack(startDestination)
     var showMenuSheet by remember { mutableStateOf(false) }
 
+    // ── NavigationBar 표시 여부 (Scaffold 밖에서 계산하여 bottomBar·content 공유) ──
+    val current = backStack.lastOrNull()
+    val showBottomBar = current != null &&
+        current !is PermissionScreen &&
+        current !is PhotoViewScreen &&
+        current !is VideosScreen &&
+        current !is RecentsScreen &&
+        current !is FavoritesScreen &&
+        current !is TrashScreen &&
+        current !is LocationScreen &&
+        current !is MapScreen &&
+        current !is SettingsScreen
+
     Scaffold(
         bottomBar = {
-            val current = backStack.lastOrNull()
-            if (current != null && current !is PermissionScreen && current !is PhotoViewScreen) {
-                // 현재 화면 기반으로 활성 탭 결정
+            if (showBottomBar) {
                 val selectedTabIndex = when {
                     showMenuSheet -> 3
                     current is AlbumsScreen || current is AlbumViewScreen -> 1
                     current is StoryListScreen -> 2
-                    // 메뉴에서 진입하는 2차 화면들 → 메뉴 탭 활성
-                    current is VideosScreen || current is FavoritesScreen ||
-                        current is RecentsScreen || current is TrashScreen ||
-                        current is LocationScreen || current is MapScreen ||
-                        current is SettingsScreen -> 3
-                    else -> 0 // PhotosScreen, SearchScreen, PhotoViewScreen
+                    else -> 0
                 }
                 GalleryNavigationBar(
                     selectedTabIndex = selectedTabIndex,
@@ -80,9 +88,8 @@ fun GalleryNavHost() {
             }
         },
     ) { innerPadding ->
-        // PhotoViewScreen은 자체적으로 인셋을 처리하므로 innerPadding 미적용
-        val isPhotoView = backStack.lastOrNull() is PhotoViewScreen
-        Box(if (isPhotoView) Modifier.fillMaxSize() else Modifier.padding(innerPadding)) {
+        // NavigationBar가 없는 화면은 innerPadding 미적용 (자체 inset 처리)
+        Box(if (!showBottomBar) Modifier.fillMaxSize() else Modifier.padding(innerPadding)) {
             NavDisplay(
                 backStack = backStack,
                 onBack = { backStack.removeLastOrNull() },
@@ -155,10 +162,20 @@ fun GalleryNavHost() {
                         PlaceholderScreen("지도 화면 (P2-5에서 구현 예정)")
                     }
                     entry<VideosScreen> {
-                        PlaceholderScreen("동영상 화면 (P1-9에서 구현 예정)")
+                        VideoScreenUI(
+                            onBack = { backStack.removeLastOrNull() },
+                            onNavigateToPhoto = { mediaId ->
+                                backStack.add(PhotoViewScreen(mediaId = mediaId))
+                            },
+                        )
                     }
                     entry<RecentsScreen> {
-                        PlaceholderScreen("최근 항목 (P1-9에서 구현 예정)")
+                        RecentsScreenUI(
+                            onBack = { backStack.removeLastOrNull() },
+                            onNavigateToPhoto = { mediaId ->
+                                backStack.add(PhotoViewScreen(mediaId = mediaId))
+                            },
+                        )
                     }
                     entry<SettingsScreen> {
                         PlaceholderScreen("설정 (미구현)")
