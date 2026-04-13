@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yoshi0311.gallery.data.model.MediaItem
 import com.yoshi0311.gallery.data.repository.MediaRepository
+import com.yoshi0311.gallery.data.repository.TrashRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,22 +20,24 @@ enum class RecentsFilter { Recent30Days, All }
 
 @HiltViewModel
 class RecentsViewModel @Inject constructor(
-    private val mediaRepository: MediaRepository,
+    mediaRepository: MediaRepository,
+    trashRepository: TrashRepository,
 ) : ViewModel() {
 
     var filter by mutableStateOf(RecentsFilter.Recent30Days)
         private set
 
-    /** 필터 적용된 미디어 아이템 — dateAdded 내림차순 (최신이 먼저) */
     val items: StateFlow<List<MediaItem>> = combine(
         mediaRepository.getAllMedia(),
+        trashRepository.observeTrashIds(),
         snapshotFlow { filter },
-    ) { allItems, f ->
+    ) { allItems, trashIds, f ->
+        val nonTrashed = allItems.filter { it.id !in trashIds }
         if (f == RecentsFilter.Recent30Days) {
             val cutoffMs = System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1_000
-            allItems.filter { it.dateAdded >= cutoffMs }
+            nonTrashed.filter { it.dateAdded >= cutoffMs }
         } else {
-            allItems
+            nonTrashed
         }
     }.stateIn(
         scope = viewModelScope,

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yoshi0311.gallery.data.model.MediaItem
 import com.yoshi0311.gallery.data.repository.MediaRepository
+import com.yoshi0311.gallery.data.repository.TrashRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PhotoMainViewModel @Inject constructor(
-    private val mediaRepository: MediaRepository,
+    mediaRepository: MediaRepository,
+    trashRepository: TrashRepository,
 ) : ViewModel() {
 
     data class MediaSection(
@@ -30,9 +32,10 @@ class PhotoMainViewModel @Inject constructor(
 
     val sections: StateFlow<List<MediaSection>> = combine(
         mediaRepository.getAllMedia(),
+        trashRepository.observeTrashIds(),
         snapshotFlow { columnCount },
-    ) { items, cols ->
-        items.groupToSections(cols)
+    ) { items, trashIds, cols ->
+        items.filter { it.id !in trashIds }.groupToSections(cols)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
@@ -44,13 +47,11 @@ class PhotoMainViewModel @Inject constructor(
     var columnCount by mutableStateOf(4)
         private set
 
-    /** 핀치 아웃 — 컬럼 수 줄임(아이템 확대) */
     fun zoomIn() {
         val idx = columnLevels.indexOf(columnCount)
         if (idx > 0) columnCount = columnLevels[idx - 1]
     }
 
-    /** 핀치 인 — 컬럼 수 늘림(아이템 축소) */
     fun zoomOut() {
         val idx = columnLevels.indexOf(columnCount)
         if (idx < columnLevels.lastIndex) columnCount = columnLevels[idx + 1]
@@ -81,8 +82,7 @@ class PhotoMainViewModel @Inject constructor(
         selectedIds = emptySet()
     }
 
-    // ── 날짜 그룹핑 (컬럼 수에 따라 일/월/연 단위 전환) ────────────
-    // cols ≤ 3 (1~2단계): 일별  /  cols 4~7 (3~4단계): 월별  /  cols ≥ 11 (5단계~): 연별
+    // ── 날짜 그룹핑 ─────────────────────────────────────────────
     private fun List<MediaItem>.groupToSections(cols: Int): List<MediaSection> {
         if (isEmpty()) return emptyList()
         val fmt = when {

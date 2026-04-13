@@ -54,6 +54,10 @@ fun MediaGridScreen(
     onPinchIn: (() -> Unit)? = null,
     onPinchOut: (() -> Unit)? = null,
     headerContent: (@Composable () -> Unit)? = null,
+    /** null이면 기본 SelectionActionBar(4버튼) 사용, 비null이면 해당 Composable로 대체 */
+    selectionBottomBar: (@Composable () -> Unit)? = null,
+    /** 썸네일 하단 우측에 표시할 텍스트 배지 (예: 휴지통 남은 일수). null이면 미표시 */
+    getItemBadge: ((MediaItem) -> String?)? = null,
 ) {
     var scaleAccumulator by remember { mutableStateOf(1f) }
 
@@ -85,7 +89,7 @@ fun MediaGridScreen(
         },
         bottomBar = {
             if (selectionMode) {
-                SelectionActionBar(
+                selectionBottomBar?.invoke() ?: SelectionActionBar(
                     onFavorite = onFavorite,
                     onShare = onShare,
                     onDelete = onDelete,
@@ -169,6 +173,7 @@ fun MediaGridScreen(
                                 isSelected = item.id in selectedIds,
                                 inSelectionMode = selectionMode,
                                 modifier = Modifier.weight(1f),
+                                bottomBadge = getItemBadge?.invoke(item),
                                 onClick = { onItemClick(item) },
                                 onLongClick = { onItemLongClick(item) },
                             )

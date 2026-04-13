@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yoshi0311.gallery.data.model.MediaItem
-import com.yoshi0311.gallery.data.repository.MediaRepository
+import com.yoshi0311.gallery.data.repository.FavoriteRepository
 import com.yoshi0311.gallery.data.repository.TrashRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,13 +16,13 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class VideoViewModel @Inject constructor(
-    mediaRepository: MediaRepository,
+class FavoriteViewModel @Inject constructor(
+    favoriteRepository: FavoriteRepository,
     trashRepository: TrashRepository,
 ) : ViewModel() {
 
     val items: StateFlow<List<MediaItem>> = combine(
-        mediaRepository.getAllVideos(),
+        favoriteRepository.observeFavoriteItems(),
         trashRepository.observeTrashIds(),
     ) { items, trashIds ->
         items.filter { it.id !in trashIds }
@@ -32,22 +32,6 @@ class VideoViewModel @Inject constructor(
         initialValue = emptyList(),
     )
 
-    // ── 핀치 줌 (3 → 4 → 7단) ────────────────────────────────
-    private val columnLevels = listOf(3, 4, 7)
-    var columnCount by mutableStateOf(3)
-        private set
-
-    fun zoomIn() {
-        val idx = columnLevels.indexOf(columnCount)
-        if (idx > 0) columnCount = columnLevels[idx - 1]
-    }
-
-    fun zoomOut() {
-        val idx = columnLevels.indexOf(columnCount)
-        if (idx < columnLevels.lastIndex) columnCount = columnLevels[idx + 1]
-    }
-
-    // ── 다중 선택 ────────────────────────────────────────────────
     var selectionMode by mutableStateOf(false)
         private set
 
@@ -61,6 +45,7 @@ class VideoViewModel @Inject constructor(
 
     fun toggleSelection(id: Long) {
         selectedIds = if (id in selectedIds) selectedIds - id else selectedIds + id
+        if (selectedIds.isEmpty()) exitSelectionMode()
     }
 
     fun exitSelectionMode() {

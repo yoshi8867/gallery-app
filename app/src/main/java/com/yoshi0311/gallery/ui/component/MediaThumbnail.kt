@@ -33,6 +33,7 @@ fun MediaThumbnail(
     isSelected: Boolean,
     inSelectionMode: Boolean,
     modifier: Modifier = Modifier,
+    bottomBadge: String? = null,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
@@ -54,7 +55,7 @@ fun MediaThumbnail(
             modifier = Modifier.fillMaxSize(),
         )
 
-        // 동영상 재생 시간 배지
+        // 동영상 재생 시간 배지 (BottomStart)
         if (item.isVideo && item.duration != null) {
             Text(
                 text = item.duration.formatDuration(),
@@ -62,6 +63,20 @@ fun MediaThumbnail(
                 color = Color.White,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
+                    .padding(4.dp)
+                    .background(Color.Black.copy(alpha = 0.55f), RoundedCornerShape(4.dp))
+                    .padding(horizontal = 4.dp, vertical = 2.dp),
+            )
+        }
+
+        // 추가 배지 (예: 휴지통 남은 일수, BottomEnd)
+        if (bottomBadge != null) {
+            Text(
+                text = bottomBadge,
+                style = MaterialTheme.typography.labelSmall,
+                color = Color.White,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
                     .padding(4.dp)
                     .background(Color.Black.copy(alpha = 0.55f), RoundedCornerShape(4.dp))
                     .padding(horizontal = 4.dp, vertical = 2.dp),

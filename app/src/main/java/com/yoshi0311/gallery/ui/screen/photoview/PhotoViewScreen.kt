@@ -1,13 +1,7 @@
 package com.yoshi0311.gallery.ui.screen.photoview
 
-import android.app.Activity
 import android.content.Intent
-import android.os.Build
-import android.provider.MediaStore
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.fadeIn
@@ -37,6 +31,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.ScreenRotation
@@ -100,12 +95,14 @@ fun PhotoViewScreen(
     mediaId: Long,
     albumId: Long?,
     onBack: () -> Unit,
+    fromTrash: Boolean = false,
     viewModel: PhotoViewViewModel = hiltViewModel(),
 ) {
-    LaunchedEffect(mediaId, albumId) { viewModel.initialize(mediaId, albumId) }
+    LaunchedEffect(mediaId, albumId, fromTrash) { viewModel.initialize(mediaId, albumId, fromTrash) }
 
     val mediaItems by viewModel.mediaItems.collectAsStateWithLifecycle()
     val initialIndex by viewModel.initialIndex.collectAsStateWithLifecycle()
+    val favoriteIds by viewModel.favoriteIds.collectAsStateWithLifecycle()
     val readyForMediaId = viewModel.readyForMediaId
     val isMuted = viewModel.isMuted
     val context = LocalContext.current
@@ -136,13 +133,6 @@ fun PhotoViewScreen(
         targetValue = if (isUiVisible) MaterialTheme.colorScheme.background else Color.Black,
         label = "bgColor",
     )
-
-    // 소프트 딜리트(휴지통으로 이동) 런처
-    val trashRequestLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartIntentSenderForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) onBack()
-    }
 
     Box(
         modifier = Modifier
@@ -244,7 +234,7 @@ fun PhotoViewScreen(
 //                    },
 //                )
                 BottomActionBar(
-                    isFavorite = false,
+                    isFavorite = currentMedia?.id?.let { it in favoriteIds } ?: false,
                     onFavorite = { viewModel.toggleFavorite(currentMedia?.id ?: 0L) },
                     onEdit = {
                         Toast.makeText(context, "추후 구현 예정입니다.", Toast.LENGTH_SHORT).show()
@@ -263,24 +253,9 @@ fun PhotoViewScreen(
                         }
                     },
                     onDelete = {
-                        currentMedia?.let { media ->
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                                // 소프트 딜리트: 휴지통으로 이동 (IS_TRASHED = 1)
-                                val pendingIntent = MediaStore.createTrashRequest(
-                                    context.contentResolver,
-                                    listOf(media.uri),
-                                    true,
-                                )
-                                trashRequestLauncher.launch(
-                                    IntentSenderRequest.Builder(pendingIntent.intentSender).build()
-                                )
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "Android 11 미만에서는 휴지통 기능을 지원하지 않습니다.",
-                                    Toast.LENGTH_SHORT,
-                                ).show()
-                            }
+                        currentMedia?.id?.let { id ->
+                            viewModel.moveToTrash(id)
+                            onBack()
                         }
                     },
                 )
@@ -538,7 +513,11 @@ private fun BottomActionBar(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(onClick = onFavorite) {
-            Icon(Icons.Outlined.FavoriteBorder, contentDescription = "즐겨찾기")
+            Icon(
+                imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                contentDescription = if (isFavorite) "즐겨찾기 해제" else "즐겨찾기",
+                tint = if (isFavorite) androidx.compose.ui.graphics.Color(0xFFE91E63) else androidx.compose.material3.LocalContentColor.current,
+            )
         }
         IconButton(onClick = onEdit) {
             Icon(Icons.Outlined.Edit, contentDescription = "편집")

@@ -9,13 +9,14 @@ import com.yoshi0311.gallery.data.model.Album
 import com.yoshi0311.gallery.data.model.MediaItem
 import com.yoshi0311.gallery.data.repository.AlbumRepository
 import com.yoshi0311.gallery.data.repository.MediaRepository
+import com.yoshi0311.gallery.data.repository.TrashRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -23,6 +24,7 @@ import javax.inject.Inject
 class AlbumViewViewModel @Inject constructor(
     private val mediaRepository: MediaRepository,
     private val albumRepository: AlbumRepository,
+    private val trashRepository: TrashRepository,
 ) : ViewModel() {
 
     // ── 앨범 ID / 이름 ──────────────────────────────────────────
@@ -34,7 +36,6 @@ class AlbumViewViewModel @Inject constructor(
     var currentAlbumName: String by mutableStateOf("")
         private set
 
-    /** 앨범 초기화 — albumId가 달라졌을 때만 업데이트 (recomposition 시 불필요한 재설정 방지) */
     fun initialize(albumId: Long, albumName: String) {
         if (albumIdFlow.value != albumId) {
             albumIdFlow.value = albumId
@@ -43,7 +44,6 @@ class AlbumViewViewModel @Inject constructor(
         }
     }
 
-    /** 드로어에서 다른 앨범 선택 시 호출 — 그리드만 교체, 드로어 유지 */
     fun switchAlbum(albumId: Long, albumName: String) {
         albumIdFlow.value = albumId
         currentAlbumId = albumId
@@ -53,8 +53,12 @@ class AlbumViewViewModel @Inject constructor(
     val mediaItems: StateFlow<List<MediaItem>> = albumIdFlow
         .filterNotNull()
         .flatMapLatest { id ->
-            mediaRepository.getAllMedia()
-                .map { items -> items.filter { it.bucketId == id } }
+            combine(
+                mediaRepository.getAllMedia(),
+                trashRepository.observeTrashIds(),
+            ) { items, trashIds ->
+                items.filter { it.bucketId == id && it.id !in trashIds }
+            }
         }
         .stateIn(
             scope = viewModelScope,
@@ -62,7 +66,6 @@ class AlbumViewViewModel @Inject constructor(
             initialValue = emptyList(),
         )
 
-    /** 서랍에 표시할 전체 앨범 목록 (이름순) */
     val albums: StateFlow<List<Album>> = albumRepository.getAllAlbums()
         .stateIn(
             scope = viewModelScope,
@@ -70,11 +73,11 @@ class AlbumViewViewModel @Inject constructor(
             initialValue = emptyList(),
         )
 
-    // ── 컬럼 수 (서랍 닫힘: 5단계 / 열림: 4단계) ────────────────
+    // ── 컬럼 수 ──────────────────────────────────────────────────
     private val closedLevels = listOf(2, 3, 4, 7, 12)
     private val openLevels   = listOf(2, 3, 5, 9)
 
-    var columnIndex by mutableStateOf(1) // 기본: 3단
+    var columnIndex by mutableStateOf(1)
         private set
 
     var isDrawerOpen by mutableStateOf(false)
@@ -87,14 +90,10 @@ class AlbumViewViewModel @Inject constructor(
             closedLevels[columnIndex]
         }
 
-    /** 최대 축소 단계 여부 — 탭 시 PhotoView 이동 대신 핀치 아웃 효과만 적용 */
     val isMaxZoomedOut: Boolean
         get() = columnIndex == closedLevels.lastIndex
 
-    /** 핀치 아웃 — 컬럼 수 줄임 */
     fun zoomIn() { if (columnIndex > 0) columnIndex-- }
-
-    /** 핀치 인 — 컬럼 수 늘림 */
     fun zoomOut() { if (columnIndex < closedLevels.lastIndex) columnIndex++ }
 
     // ── 서랍 ────────────────────────────────────────────────────

@@ -74,26 +74,25 @@
 ## Phase 2 — 부가 기능
 
 ### [P2-1] 즐겨찾기 ⏳
-- [ ] `FavoriteEntity.kt` + `FavoriteDao.kt` + `GalleryDatabase.kt`
-- [ ] `FavoriteRepository.kt`
-- [ ] `DatabaseModule.kt`
-- [ ] `FavoriteViewModel.kt`
-- [ ] `FavoriteScreen.kt` — `MediaGridScreen` 공용 컴포넌트 재사용 (하단 내비게이션 없음, 스티키 헤더 없음, 단순 그리드)
-- [ ] Photo View 하트 버튼 연동
+- [x] `FavoriteEntity.kt` + `FavoriteDao.kt` + `GalleryDatabase.kt`
+- [x] `FavoriteRepository.kt`
+- [x] `DatabaseModule.kt`
+- [x] `FavoriteViewModel.kt`
+- [x] `FavoriteScreen.kt` — `MediaGridScreen` 공용 컴포넌트 재사용 (하단 내비게이션 없음, 스티키 헤더 없음, 단순 그리드)
+- [x] Photo View 하트 버튼 연동
 
 ### [P2-2] 휴지통 ⏳
-- [ ] `TrashRepository.kt` (IS_TRASHED 쿼리)
-- [ ] `TrashViewModel.kt`
-- [ ] `TrashScreen.kt` — `MediaGridScreen` 공용 컴포넌트 재사용 (하단 내비게이션 없음, 스티키 헤더 없음, 단순 그리드)
-- [ ] API 30 미만 안내 문구 분기
+- [x] `TrashRepository.kt` (IS_TRASHED 쿼리)
+- [x] `TrashViewModel.kt`
+- [x] `TrashScreen.kt` — `MediaGridScreen` 공용 컴포넌트 재사용 (하단 내비게이션 없음, 스티키 헤더 없음, 단순 그리드)
+- [x] 실제로 삭제를 수행하진 않고 그런 흉내만 냄.
+- [x] 방금 삭제한 파일 기준 30일 후에 삭제되는 것처럼 썸네일 하단에 '30일'이라고 표시함. 삭제한 지 하루 지난 건 29일로. (하지만 실제로 30일이 지난다고 해서 파일이 삭제되지는 않음.) 
 
 ### [P2-3] 공유 기능 ⏳
 - [ ] Android Sharesheet 연동 (단일/다중 선택 공유)
 
 ### [P2-4] 검색 스크린 ⏳
-- [ ] `SearchRepository.kt` (파일명 / 도시명 쿼리)
-- [ ] `SearchViewModel.kt` + `SearchScreen.kt`
-- [ ] DockedSearchBar + FilterChipRow + 최근 검색어
+- [x] 구현 계획 취소됨.
 
 ### [P2-5] 위치 + 지도 스크린 ⏳
 - [ ] EXIF GPS 파싱 유틸

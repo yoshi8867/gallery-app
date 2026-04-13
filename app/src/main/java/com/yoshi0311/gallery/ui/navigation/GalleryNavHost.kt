@@ -23,11 +23,13 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.yoshi0311.gallery.ui.component.GalleryNavigationBar
 import com.yoshi0311.gallery.ui.screen.albumlist.AlbumListScreen
 import com.yoshi0311.gallery.ui.screen.albumview.AlbumViewScreen
+import com.yoshi0311.gallery.ui.screen.favorites.FavoriteScreen as FavoriteScreenUI
 import com.yoshi0311.gallery.ui.screen.menu.MenuModalSheet
 import com.yoshi0311.gallery.ui.screen.permission.PermissionScreen as PermissionScreenUI
 import com.yoshi0311.gallery.ui.screen.photomain.PhotoMainScreen
 import com.yoshi0311.gallery.ui.screen.photoview.PhotoViewScreen as PhotoViewScreenUI
 import com.yoshi0311.gallery.ui.screen.recents.RecentsScreen as RecentsScreenUI
+import com.yoshi0311.gallery.ui.screen.trash.TrashScreen as TrashScreenUI
 import com.yoshi0311.gallery.ui.screen.video.VideoScreen as VideoScreenUI
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -144,16 +146,27 @@ fun GalleryNavHost() {
                             mediaId = it.mediaId,
                             albumId = it.albumId,
                             onBack = { backStack.removeLastOrNull() },
+                            fromTrash = it.fromTrash,
                         )
                     }
                     entry<SearchScreen> {
                         PlaceholderScreen("검색 화면 (P2-4에서 구현 예정)")
                     }
                     entry<FavoritesScreen> {
-                        PlaceholderScreen("즐겨찾기 (P2-1에서 구현 예정)")
+                        FavoriteScreenUI(
+                            onBack = { backStack.removeLastOrNull() },
+                            onNavigateToPhoto = { mediaId ->
+                                backStack.add(PhotoViewScreen(mediaId = mediaId))
+                            },
+                        )
                     }
                     entry<TrashScreen> {
-                        PlaceholderScreen("휴지통 (P2-2에서 구현 예정)")
+                        TrashScreenUI(
+                            onBack = { backStack.removeLastOrNull() },
+                            onNavigateToPhoto = { mediaId ->
+                                backStack.add(PhotoViewScreen(mediaId = mediaId, fromTrash = true))
+                            },
+                        )
                     }
                     entry<LocationScreen> {
                         PlaceholderScreen("위치 화면 (P2-5에서 구현 예정)")

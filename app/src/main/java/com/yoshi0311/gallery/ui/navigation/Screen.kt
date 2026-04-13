@@ -20,7 +20,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable data class PhotoViewScreen(
     val mediaId: Long,
-    val albumId: Long? = null
+    val albumId: Long? = null,
+    val fromTrash: Boolean = false,
 ) : NavKey
 
 // ── 기능 스크린 ─────────────────────────────────────────────
