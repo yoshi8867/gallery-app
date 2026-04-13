@@ -3,7 +3,7 @@
 ---
 
 ## 전체 진행도
-████████████░░░░░░░░ 50% (8/16)
+█████████████░░░░░░░ 56% (9/16)
 
 ---
 
@@ -62,9 +62,12 @@
 - [x] Photo View 내 동영상 분기: ExoPlayer 컨트롤러 + 뮤트 버튼
 - [x] `VideoOverlay.kt` Composable
 
-### [P1-9] 특수 앨범: 동영상 / 최근 항목 ⏳
-- [ ] `VideoViewModel.kt` + `VideoScreen.kt` (동영상 필터, 날짜 섹션)
-- [ ] `RecentsViewModel.kt` + `RecentsScreen.kt` (30일/전체 세그먼트 버튼)
+### [P1-9] 특수 앨범: 동영상 / 최근 항목 ✅
+- [x] `VideoViewModel.kt` + `VideoScreen.kt` — 동영상 필터, 단순 그리드, 핀치 줌 3단(3/4/7), 다중 선택
+- [x] `RecentsViewModel.kt` + `RecentsScreen.kt` — 30일/전체 기간 필터, 단순 그리드, 다중 선택
+- [x] `MediaGridScreen.kt` — 동영상·최근·즐겨찾기·휴지통 공용 Composable
+- [x] `SelectionActionBar` 더보기(···) 버튼 추가
+- [x] 메뉴 2차 화면 NavigationBar 숨김 처리
 
 ---
 
@@ -116,6 +119,6 @@
 ---
 
 ## 마지막 업데이트
-2026-04-13 | P1-9 구현 중 — VideoScreen·RecentsScreen + MediaGridScreen 공용 컴포넌트 + SelectionActionBar 더보기 버튼 추가
+2026-04-13 | P1-9 완료 — VideoScreen·RecentsScreen·MediaGridScreen 공용 컴포넌트·SelectionActionBar 더보기·NavigationBar 숨김
 2026-04-13 | P1-7 완료 — PhotoViewScreen (HorizontalPager + ZoomableImage + ThumbnailStrip + 상세정보 BottomSheet + BottomActionBar)
 2026-04-13 | P1-8 완료 — VideoOverlay (ExoPlayer + 뮤트 버튼)
