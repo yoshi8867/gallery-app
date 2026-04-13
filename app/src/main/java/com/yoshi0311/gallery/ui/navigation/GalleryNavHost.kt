@@ -29,6 +29,8 @@ import com.yoshi0311.gallery.ui.screen.permission.PermissionScreen as Permission
 import com.yoshi0311.gallery.ui.screen.photomain.PhotoMainScreen
 import com.yoshi0311.gallery.ui.screen.photoview.PhotoViewScreen as PhotoViewScreenUI
 import com.yoshi0311.gallery.ui.screen.recents.RecentsScreen as RecentsScreenUI
+import com.yoshi0311.gallery.ui.screen.location.LocationScreen as LocationScreenUI
+import com.yoshi0311.gallery.ui.screen.map.MapScreen as MapScreenUI
 import com.yoshi0311.gallery.ui.screen.trash.TrashScreen as TrashScreenUI
 import com.yoshi0311.gallery.ui.screen.video.VideoScreen as VideoScreenUI
 
@@ -91,7 +93,9 @@ fun GalleryNavHost() {
         },
     ) { innerPadding ->
         // NavigationBar가 없는 화면은 innerPadding 미적용 (자체 inset 처리)
-        Box(if (!showBottomBar) Modifier.fillMaxSize() else Modifier.padding(innerPadding)) {
+        Box(
+            if (!showBottomBar) Modifier.fillMaxSize()
+            else Modifier.padding(innerPadding)) {
             NavDisplay(
                 backStack = backStack,
                 onBack = { backStack.removeLastOrNull() },
@@ -169,10 +173,21 @@ fun GalleryNavHost() {
                         )
                     }
                     entry<LocationScreen> {
-                        PlaceholderScreen("위치 화면 (P2-5에서 구현 예정)")
+                        LocationScreenUI(
+                            onBack = { backStack.removeLastOrNull() },
+                            onNavigateToMap = { cityFilter ->
+                                backStack.add(MapScreen(cityFilter = cityFilter))
+                            },
+                        )
                     }
                     entry<MapScreen> {
-                        PlaceholderScreen("지도 화면 (P2-5에서 구현 예정)")
+                        MapScreenUI(
+                            cityFilter = it.cityFilter,
+                            onBack = { backStack.removeLastOrNull() },
+                            onNavigateToPhoto = { mediaId ->
+                                backStack.add(PhotoViewScreen(mediaId = mediaId))
+                            },
+                        )
                     }
                     entry<VideosScreen> {
                         VideoScreenUI(

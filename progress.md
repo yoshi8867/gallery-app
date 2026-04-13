@@ -3,7 +3,7 @@
 ---
 
 ## 전체 진행도
-█████████████░░░░░░░ 56% (9/16)
+██████████████░░░░░░ 62% (10/16)
 
 ---
 
@@ -94,18 +94,31 @@
 ### [P2-4] 검색 스크린 ⏳
 - [x] 구현 계획 취소됨.
 
-### [P2-5] 위치 + 지도 스크린 ⏳
-- [ ] EXIF GPS 파싱 유틸
-- [ ] `LocationViewModel.kt` + `LocationScreen.kt` (국가/도시 StickyHeader)
-- [ ] `MapViewModel.kt` + `MapScreen.kt` (GoogleMap + 클러스터 마커 + BottomSheet)
-- [ ] secrets-gradle-plugin 설정 (`local.properties` → `MAPS_API_KEY`)
+### [P2-5] 위치 + 지도 스크린 ✅
+- [x] EXIF GPS 파싱 유틸 (`util/ExifLocationUtil.kt`)
+- [x] `LocationRepository.kt` (EXIF 읽기 + Geocoder 캐싱 + 국가/도시 그룹핑)
+- [x] `LocationViewModel.kt` + `LocationScreen.kt` (국가 섹션 헤더 + 도시 카드 + 빈 상태)
+- [x] `MapViewModel.kt` + `MapScreen.kt` (GoogleMap + 클러스터 마커 + BottomSheet)
+- [x] secrets-gradle-plugin 설정 (`local.properties` → `MAPS_API_KEY`)
+- ⚠️ **지도 화면(MapScreen)은 Google Maps API 유료 결제 필요로 인해 추후 개발로 미룸.**
+  LocationScreen(위치 목록)까지는 정상 동작. 지도 화면은 API 키 발급 후 재개 예정.
 
 ### [P2-6] `PhotoMainScreen.kt`에서 다중 선택 시 
-- [ ] 다중 선택 후 하단 메뉴에서 즐겨찾기 버튼 눌렀을 때 한꺼번에 즐겨찾기하는 기능.
-- [ ] 다중 선택 후 하단 메뉴에서 삭제(휴지통) 버튼 눌렀을 때 한꺼번에 휴지통에 들어가는 기능.
+- [x] 다중 선택 후 하단 메뉴에서 즐겨찾기 버튼 눌렀을 때 한꺼번에 즐겨찾기하는 기능.
+- [x] 다중 선택 후 하단 메뉴에서 삭제(휴지통) 버튼 눌렀을 때 한꺼번에 휴지통에 들어가는 기능.
 
 ### [P2-7] `PhotoMainScreen.kt`, `MediaGridScreen.kt`의 썸네일 패딩
-- [ ] 썸네일 padding 값이 아주 작게 들어가도록(그래서 썸네일끼리 붙어있을 때 흰색 틈이 보이게) 수정하기.
+- [x] 썸네일 padding 값이 아주 작게 들어가도록(그래서 썸네일끼리 붙어있을 때 흰색 틈이 보이게) 수정하기.
+
+### [P2-8] `MediaGridScreen.kt`을 사용하는 화면들에서 핀치인/아웃 기능 확인
+- [ ] `PhotoMainScreen.kt`처럼 핀치 줌: 1.5 / 3 / 4 / 7 / 11 / 20단 전환(11·20단은 저해상도 썸네일)이 되어야 하는데 안 되고 있음. 구현은 이미 되어있는데 버그 때문에 기능하지 못 하는 것 같음.
+
+### [P2-9] `PhotoMainScreen.kt`과 `AlbumViewScreen.kt`에서 다중 선택 시 기능 
+- [ ] 다중 선택 후 뒤로가기 버튼(시스템 버튼)을 눌렀을 때 선택 취소 되어야 함(지금은 앱이 종료되어 버림)
+- [ ] `PhotoMainScreen.kt`과 `AlbumViewScreen.kt`에서 다중 선택 시 하단 메뉴(사진/앨범/스토리/메뉴)가 사라져야 함. (다중 선택이 취소 되면 다시 생김)
+
+### [P2-10] `AlbumViewScreen.kt`에서 손가락 두 개가 닿았을 때
+- [ ] 손가락 2개가 닿았다는 것은 핀치 줌을 시도하는 것임. 즉, 손가락 2개 닿은 상태에서는 드로어가 열리거나 닫히면 안 되도록 수정해야 함.
 
 ---
 
@@ -125,6 +138,7 @@
 ---
 
 ## 마지막 업데이트
+2026-04-13 | P2-5 완료(부분) — LocationScreen 동작 확인. MapScreen은 Google Maps API 키 필요로 추후 개발 미룸
 2026-04-13 | P1-9 완료 — VideoScreen·RecentsScreen·MediaGridScreen 공용 컴포넌트·SelectionActionBar 더보기·NavigationBar 숨김
 2026-04-13 | P1-7 완료 — PhotoViewScreen (HorizontalPager + ZoomableImage + ThumbnailStrip + 상세정보 BottomSheet + BottomActionBar)
 2026-04-13 | P1-8 완료 — VideoOverlay (ExoPlayer + 뮤트 버튼)
