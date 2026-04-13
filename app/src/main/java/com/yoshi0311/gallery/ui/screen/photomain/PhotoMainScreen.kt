@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -57,6 +58,13 @@ fun PhotoMainScreen(
     val columnCount = viewModel.columnCount
     val selectionMode = viewModel.selectionMode
     val selectedIds = viewModel.selectedIds
+
+    // columnLevels = [2, 3, 4, 7, 11, 20]: 1~3단계=1dp, 4단계=0.5dp, 5~6단계=0dp
+    val thumbnailPadding: Dp = when {
+        columnCount <= 4 -> 1.dp
+        columnCount <= 7 -> 0.5.dp
+        else -> 0.dp
+    }
 
     var scaleAccumulator by remember { mutableStateOf(1f) }
     var debugLog by remember { mutableStateOf("핀치 대기 중...") }
@@ -89,9 +97,9 @@ fun PhotoMainScreen(
             bottomBar = {
                 if (selectionMode) {
                     SelectionActionBar(
-                        onFavorite = { /* P2-1에서 구현 */ },
+                        onFavorite = { viewModel.addSelectedToFavorites() },
                         onShare = { /* P2-3에서 구현 */ },
-                        onDelete = { /* TODO */ },
+                        onDelete = { viewModel.moveSelectedToTrash() },
                     )
                 }
             },
@@ -190,6 +198,7 @@ fun PhotoMainScreen(
                                         isSelected = item.id in selectedIds,
                                         inSelectionMode = selectionMode,
                                         modifier = Modifier.weight(1f),
+                                        thumbnailPadding = thumbnailPadding,
                                         onClick = {
                                             when {
                                                 selectionMode -> viewModel.toggleSelection(item.id)

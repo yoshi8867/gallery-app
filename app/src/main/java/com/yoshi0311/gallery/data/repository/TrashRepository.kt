@@ -22,6 +22,9 @@ interface TrashRepository {
     /** 미디어를 휴지통으로 이동 */
     suspend fun moveToTrash(mediaId: Long)
 
+    /** 여러 미디어를 한꺼번에 휴지통으로 이동 */
+    suspend fun moveAllToTrash(mediaIds: Set<Long>)
+
     /** 선택한 항목들을 휴지통에서 복원 */
     suspend fun restoreFromTrash(mediaIds: Set<Long>)
 }
@@ -51,6 +54,10 @@ class TrashRepositoryImpl @Inject constructor(
 
     override suspend fun moveToTrash(mediaId: Long) {
         dao.insert(TrashEntity(mediaId))
+    }
+
+    override suspend fun moveAllToTrash(mediaIds: Set<Long>) {
+        mediaIds.forEach { dao.insert(TrashEntity(it)) }
     }
 
     override suspend fun restoreFromTrash(mediaIds: Set<Long>) {

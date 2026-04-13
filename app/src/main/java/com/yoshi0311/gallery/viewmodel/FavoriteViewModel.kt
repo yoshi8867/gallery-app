@@ -13,12 +13,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
-    favoriteRepository: FavoriteRepository,
-    trashRepository: TrashRepository,
+    private val favoriteRepository: FavoriteRepository,
+    private val trashRepository: TrashRepository,
 ) : ViewModel() {
 
     val items: StateFlow<List<MediaItem>> = combine(
@@ -51,5 +52,22 @@ class FavoriteViewModel @Inject constructor(
     fun exitSelectionMode() {
         selectionMode = false
         selectedIds = emptySet()
+    }
+
+    /** 선택된 항목들을 즐겨찾기에서 해제 */
+    fun removeSelectedFromFavorites() {
+        val ids = selectedIds
+        viewModelScope.launch {
+            favoriteRepository.removeFavorites(ids)
+            exitSelectionMode()
+        }
+    }
+
+    fun moveSelectedToTrash() {
+        val ids = selectedIds
+        viewModelScope.launch {
+            trashRepository.moveAllToTrash(ids)
+            exitSelectionMode()
+        }
     }
 }

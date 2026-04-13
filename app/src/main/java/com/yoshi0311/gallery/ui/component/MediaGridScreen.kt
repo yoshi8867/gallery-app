@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.dp
 import com.yoshi0311.gallery.data.model.MediaItem
 import kotlin.math.sqrt
 
@@ -53,6 +54,8 @@ fun MediaGridScreen(
     onDelete: () -> Unit = {},
     onPinchIn: (() -> Unit)? = null,
     onPinchOut: (() -> Unit)? = null,
+    /** 핀치 줌 단계 목록. 전달 시 단계 인덱스 기반으로 패딩 결정. 미전달 시 고정 1dp. */
+    columnLevels: List<Int> = emptyList(),
     headerContent: (@Composable () -> Unit)? = null,
     /** null이면 기본 SelectionActionBar(4버튼) 사용, 비null이면 해당 Composable로 대체 */
     selectionBottomBar: (@Composable () -> Unit)? = null,
@@ -60,6 +63,18 @@ fun MediaGridScreen(
     getItemBadge: ((MediaItem) -> String?)? = null,
 ) {
     var scaleAccumulator by remember { mutableStateOf(1f) }
+
+    // columnLevels 전달 시 단계 인덱스 기반, 미전달 시 고정 1dp
+    val thumbnailPadding = if (columnLevels.isNotEmpty()) {
+        val idx = columnLevels.indexOf(columnCount).coerceAtLeast(0)
+        when {
+            idx <= 2 -> 1.dp
+            idx == 3 -> 0.5.dp
+            else     -> 0.dp
+        }
+    } else {
+        1.dp
+    }
 
     Scaffold(
         topBar = {
@@ -173,6 +188,7 @@ fun MediaGridScreen(
                                 isSelected = item.id in selectedIds,
                                 inSelectionMode = selectionMode,
                                 modifier = Modifier.weight(1f),
+                                thumbnailPadding = thumbnailPadding,
                                 bottomBadge = getItemBadge?.invoke(item),
                                 onClick = { onItemClick(item) },
                                 onLongClick = { onItemLongClick(item) },

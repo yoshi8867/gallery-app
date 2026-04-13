@@ -18,6 +18,12 @@ interface FavoriteRepository {
 
     /** 즐겨찾기 추가 / 해제 토글 */
     suspend fun toggleFavorite(mediaId: Long)
+
+    /** 여러 항목을 즐겨찾기에 추가 (이미 추가된 항목은 건너뜀) */
+    suspend fun addFavorites(mediaIds: Set<Long>)
+
+    /** 여러 항목을 즐겨찾기에서 제거 */
+    suspend fun removeFavorites(mediaIds: Set<Long>)
 }
 
 @Singleton
@@ -37,5 +43,15 @@ class FavoriteRepositoryImpl @Inject constructor(
     override suspend fun toggleFavorite(mediaId: Long) {
         if (dao.count(mediaId) > 0) dao.delete(mediaId)
         else dao.insert(FavoriteEntity(mediaId))
+    }
+
+    override suspend fun addFavorites(mediaIds: Set<Long>) {
+        mediaIds.forEach { id ->
+            if (dao.count(id) == 0) dao.insert(FavoriteEntity(id))
+        }
+    }
+
+    override suspend fun removeFavorites(mediaIds: Set<Long>) {
+        mediaIds.forEach { dao.delete(it) }
     }
 }

@@ -33,10 +33,11 @@ fun VideoScreen(
             if (!selectionMode) viewModel.enterSelectionMode(item.id)
         },
         onExitSelection = { viewModel.exitSelectionMode() },
-        onFavorite = { /* P2-1에서 구현 */ },
+        onFavorite = { viewModel.addSelectedToFavorites() },
         onShare = { /* P2-3에서 구현 */ },
-        onDelete = { /* TODO */ },
+        onDelete = { viewModel.moveSelectedToTrash() },
         onPinchIn = { viewModel.zoomIn() },
         onPinchOut = { viewModel.zoomOut() },
+        columnLevels = listOf(3, 4, 7),
     )
 }

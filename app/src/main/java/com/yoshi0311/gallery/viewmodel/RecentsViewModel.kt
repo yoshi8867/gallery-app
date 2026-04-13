@@ -7,6 +7,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yoshi0311.gallery.data.model.MediaItem
+import com.yoshi0311.gallery.data.repository.FavoriteRepository
 import com.yoshi0311.gallery.data.repository.MediaRepository
 import com.yoshi0311.gallery.data.repository.TrashRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 enum class RecentsFilter { Recent30Days, All }
@@ -21,7 +23,8 @@ enum class RecentsFilter { Recent30Days, All }
 @HiltViewModel
 class RecentsViewModel @Inject constructor(
     mediaRepository: MediaRepository,
-    trashRepository: TrashRepository,
+    private val trashRepository: TrashRepository,
+    private val favoriteRepository: FavoriteRepository,
 ) : ViewModel() {
 
     var filter by mutableStateOf(RecentsFilter.Recent30Days)
@@ -66,5 +69,21 @@ class RecentsViewModel @Inject constructor(
     fun exitSelectionMode() {
         selectionMode = false
         selectedIds = emptySet()
+    }
+
+    fun addSelectedToFavorites() {
+        val ids = selectedIds
+        viewModelScope.launch {
+            favoriteRepository.addFavorites(ids)
+            exitSelectionMode()
+        }
+    }
+
+    fun moveSelectedToTrash() {
+        val ids = selectedIds
+        viewModelScope.launch {
+            trashRepository.moveAllToTrash(ids)
+            exitSelectionMode()
+        }
     }
 }

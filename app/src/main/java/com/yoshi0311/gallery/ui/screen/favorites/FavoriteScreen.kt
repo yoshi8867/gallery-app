@@ -30,8 +30,8 @@ fun FavoriteScreen(
             if (!viewModel.selectionMode) viewModel.enterSelectionMode(item.id)
         },
         onExitSelection = { viewModel.exitSelectionMode() },
-        onFavorite = { /* P2-3 이후 즐겨찾기 해제 연동 */ },
+        onFavorite = { viewModel.removeSelectedFromFavorites() },
         onShare = { /* P2-3에서 구현 */ },
-        onDelete = { /* TODO */ },
+        onDelete = { viewModel.moveSelectedToTrash() },
     )
 }

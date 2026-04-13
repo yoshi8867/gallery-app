@@ -7,6 +7,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yoshi0311.gallery.data.model.MediaItem
+import kotlinx.coroutines.launch
+import com.yoshi0311.gallery.data.repository.FavoriteRepository
 import com.yoshi0311.gallery.data.repository.MediaRepository
 import com.yoshi0311.gallery.data.repository.TrashRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PhotoMainViewModel @Inject constructor(
     mediaRepository: MediaRepository,
-    trashRepository: TrashRepository,
+    private val trashRepository: TrashRepository,
+    private val favoriteRepository: FavoriteRepository,
 ) : ViewModel() {
 
     data class MediaSection(
@@ -80,6 +83,22 @@ class PhotoMainViewModel @Inject constructor(
     fun exitSelectionMode() {
         selectionMode = false
         selectedIds = emptySet()
+    }
+
+    fun addSelectedToFavorites() {
+        val ids = selectedIds
+        viewModelScope.launch {
+            favoriteRepository.addFavorites(ids)
+            exitSelectionMode()
+        }
+    }
+
+    fun moveSelectedToTrash() {
+        val ids = selectedIds
+        viewModelScope.launch {
+            trashRepository.moveAllToTrash(ids)
+            exitSelectionMode()
+        }
     }
 
     // ── 날짜 그룹핑 ─────────────────────────────────────────────

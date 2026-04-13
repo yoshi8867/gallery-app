@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -33,12 +34,14 @@ fun MediaThumbnail(
     isSelected: Boolean,
     inSelectionMode: Boolean,
     modifier: Modifier = Modifier,
+    thumbnailPadding: Dp = 1.dp,
     bottomBadge: String? = null,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
+            .padding(thumbnailPadding)
             .aspectRatio(1f)
             .combinedClickable(
                 onClick = onClick,

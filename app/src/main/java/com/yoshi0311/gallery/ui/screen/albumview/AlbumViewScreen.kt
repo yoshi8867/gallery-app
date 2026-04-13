@@ -52,6 +52,7 @@ import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -84,6 +85,13 @@ fun AlbumViewScreen(
     val selectedIds    = viewModel.selectedIds
     val activeAlbumId  = viewModel.currentAlbumId ?: albumId
     val activeAlbumName = viewModel.currentAlbumName.ifEmpty { albumName }
+
+    // columnIndex 기반 단계별 썸네일 간격: 0~2→1dp, 3→0.5dp, 4+→0dp
+    val thumbnailGap: Dp = when {
+        viewModel.columnIndex <= 2 -> 1.dp
+        viewModel.columnIndex == 3 -> 0.5.dp
+        else                       -> 0.dp
+    }
 
     var scaleAccumulator by remember { mutableStateOf(1f) }
     val drawerListState = rememberLazyListState()   // 드로어 스크롤 위치 유지
@@ -178,9 +186,9 @@ fun AlbumViewScreen(
                 // ── 미디어 그리드 ────────────────────────────────────
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(columnCount),
-                    contentPadding = PaddingValues(1.dp),
-                    horizontalArrangement = Arrangement.spacedBy(1.dp),
-                    verticalArrangement = Arrangement.spacedBy(1.dp),
+                    contentPadding = PaddingValues(thumbnailGap),
+                    horizontalArrangement = Arrangement.spacedBy(thumbnailGap),
+                    verticalArrangement = Arrangement.spacedBy(thumbnailGap),
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
@@ -233,6 +241,7 @@ fun AlbumViewScreen(
                             item = item,
                             isSelected = item.id in selectedIds,
                             inSelectionMode = selectionMode,
+                            thumbnailPadding = 0.dp,
                             onClick = {
                                 when {
                                     selectionMode          -> viewModel.toggleSelection(item.id)

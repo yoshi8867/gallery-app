@@ -100,6 +100,13 @@
 - [ ] `MapViewModel.kt` + `MapScreen.kt` (GoogleMap + 클러스터 마커 + BottomSheet)
 - [ ] secrets-gradle-plugin 설정 (`local.properties` → `MAPS_API_KEY`)
 
+### [P2-6] `PhotoMainScreen.kt`에서 다중 선택 시 
+- [ ] 다중 선택 후 하단 메뉴에서 즐겨찾기 버튼 눌렀을 때 한꺼번에 즐겨찾기하는 기능.
+- [ ] 다중 선택 후 하단 메뉴에서 삭제(휴지통) 버튼 눌렀을 때 한꺼번에 휴지통에 들어가는 기능.
+
+### [P2-7] `PhotoMainScreen.kt`, `MediaGridScreen.kt`의 썸네일 패딩
+- [ ] 썸네일 padding 값이 아주 작게 들어가도록(그래서 썸네일끼리 붙어있을 때 흰색 틈이 보이게) 수정하기.
+
 ---
 
 ## Phase 3 — 선택 기능 (최후순위)
