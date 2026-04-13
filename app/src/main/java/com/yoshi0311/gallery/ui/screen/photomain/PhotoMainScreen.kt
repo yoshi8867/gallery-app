@@ -1,6 +1,6 @@
 package com.yoshi0311.gallery.ui.screen.photomain
 
-import androidx.compose.foundation.background
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -26,24 +25,25 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yoshi0311.gallery.ui.component.MediaThumbnail
 import com.yoshi0311.gallery.ui.component.SelectionActionBar
 import com.yoshi0311.gallery.ui.component.SelectionTopBar
+import com.yoshi0311.gallery.util.shareMediaItems
 import com.yoshi0311.gallery.viewmodel.PhotoMainViewModel
 import kotlin.math.sqrt
 
@@ -52,12 +52,20 @@ import kotlin.math.sqrt
 fun PhotoMainScreen(
     onNavigateToPhoto: (mediaId: Long) -> Unit,
     onNavigateToSearch: () -> Unit,
+    onSelectionModeChange: (Boolean) -> Unit = {},
     viewModel: PhotoMainViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val sections by viewModel.sections.collectAsStateWithLifecycle()
     val columnCount = viewModel.columnCount
     val selectionMode = viewModel.selectionMode
     val selectedIds = viewModel.selectedIds
+
+    // 다중 선택 상태를 GalleryNavHost로 올림 (내비게이션 바 숨김 처리용)
+    LaunchedEffect(selectionMode) { onSelectionModeChange(selectionMode) }
+
+    // 다중 선택 중 시스템 뒤로가기 → 선택 해제
+    BackHandler(enabled = selectionMode) { viewModel.exitSelectionMode() }
 
     // columnLevels = [2, 3, 4, 7, 11, 20]: 1~3단계=1dp, 4단계=0.5dp, 5~6단계=0dp
     val thumbnailPadding: Dp = when {
@@ -66,13 +74,9 @@ fun PhotoMainScreen(
         else -> 0.dp
     }
 
-    var scaleAccumulator by remember { mutableStateOf(1f) }
-    var debugLog by remember { mutableStateOf("핀치 대기 중...") }
-
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Scaffold(
+    Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
                 if (selectionMode) {
@@ -90,7 +94,6 @@ fun PhotoMainScreen(
                             )
                         },
                         scrollBehavior = scrollBehavior,
-                        modifier = Modifier.padding(vertical = 40.dp),
                     )
                 }
             },
@@ -98,7 +101,10 @@ fun PhotoMainScreen(
                 if (selectionMode) {
                     SelectionActionBar(
                         onFavorite = { viewModel.addSelectedToFavorites() },
-                        onShare = { /* P2-3에서 구현 */ },
+                        onShare = {
+                        val allItems = sections.flatMap { it.items }
+                        shareMediaItems(context, allItems.filter { it.id in selectedIds })
+                    },
                         onDelete = { viewModel.moveSelectedToTrash() },
                     )
                 }
@@ -129,6 +135,7 @@ fun PhotoMainScreen(
                             awaitEachGesture {
                                 var prevDistance = 0f
                                 var isPinching = false
+                                var scaleAccumulator = 1f
 
                                 while (true) {
                                     val event = awaitPointerEvent(PointerEventPass.Initial)
@@ -147,17 +154,13 @@ fun PhotoMainScreen(
                                         } else if (prevDistance > 0f) {
                                             val zoom = distance / prevDistance
                                             scaleAccumulator *= zoom
-                                            debugLog = "zoom=${String.format("%.4f", zoom)}  acc=${String.format("%.4f", scaleAccumulator)}  cols=${viewModel.columnCount}"
-
                                             when {
                                                 scaleAccumulator > 1.3f -> {
                                                     viewModel.zoomIn()
-                                                    debugLog = "[핀치 아웃 → 확대] zoom=${String.format("%.4f", zoom)}  acc=${String.format("%.4f", scaleAccumulator)}  cols=${viewModel.columnCount}"
                                                     scaleAccumulator = 1f
                                                 }
                                                 scaleAccumulator < 0.77f -> {
                                                     viewModel.zoomOut()
-                                                    debugLog = "[핀치 인 → 축소] zoom=${String.format("%.4f", zoom)}  acc=${String.format("%.4f", scaleAccumulator)}  cols=${viewModel.columnCount}"
                                                     scaleAccumulator = 1f
                                                 }
                                             }
@@ -221,19 +224,6 @@ fun PhotoMainScreen(
                 }
             }
         }
-
-        // ── 디버그 오버레이 ─────────────────────────────────────────
-        Text(
-            text = debugLog,
-            color = Color.White,
-            fontSize = 12.sp,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 80.dp)
-                .background(Color(0xCC000000))
-                .padding(horizontal = 12.dp, vertical = 6.dp),
-        )
-    } // Box 닫기
 }
 
 @Composable

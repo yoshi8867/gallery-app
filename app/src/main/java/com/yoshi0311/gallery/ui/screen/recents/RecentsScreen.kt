@@ -10,10 +10,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yoshi0311.gallery.ui.component.MediaGridScreen
+import com.yoshi0311.gallery.util.shareMediaItems
 import com.yoshi0311.gallery.viewmodel.RecentsFilter
 import com.yoshi0311.gallery.viewmodel.RecentsViewModel
 
@@ -24,6 +26,7 @@ fun RecentsScreen(
     onNavigateToPhoto: (mediaId: Long) -> Unit,
     viewModel: RecentsViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val items by viewModel.items.collectAsStateWithLifecycle()
     val filter = viewModel.filter
     val selectionMode = viewModel.selectionMode
@@ -45,7 +48,7 @@ fun RecentsScreen(
         },
         onExitSelection = { viewModel.exitSelectionMode() },
         onFavorite = { viewModel.addSelectedToFavorites() },
-        onShare = { /* P2-3에서 구현 */ },
+        onShare = { shareMediaItems(context, items.filter { it.id in selectedIds }) },
         onDelete = { viewModel.moveSelectedToTrash() },
         headerContent = if (!selectionMode) {
             {

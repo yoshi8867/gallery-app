@@ -2,12 +2,17 @@ package com.yoshi0311.gallery.ui.navigation
 
 import android.Manifest
 import android.os.Build
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,10 +60,15 @@ fun GalleryNavHost() {
 
     val backStack = rememberNavBackStack(startDestination)
     var showMenuSheet by remember { mutableStateOf(false) }
+    var isSelectionActive by remember { mutableStateOf(false) }
+
+    // 화면 이동 시 선택 모드 초기화
+    val current = backStack.lastOrNull()
+    LaunchedEffect(current) { isSelectionActive = false }
 
     // ── NavigationBar 표시 여부 (Scaffold 밖에서 계산하여 bottomBar·content 공유) ──
-    val current = backStack.lastOrNull()
     val showBottomBar = current != null &&
+        !isSelectionActive &&
         current !is PermissionScreen &&
         current !is PhotoViewScreen &&
         current !is VideosScreen &&
@@ -99,6 +109,12 @@ fun GalleryNavHost() {
             NavDisplay(
                 backStack = backStack,
                 onBack = { backStack.removeLastOrNull() },
+                transitionSpec = {
+                    fadeIn(tween(180)) togetherWith fadeOut(tween(120))
+                },
+                popTransitionSpec = {
+                    fadeIn(tween(150)) togetherWith fadeOut(tween(100))
+                },
                 entryProvider = entryProvider {
                     entry<PermissionScreen> {
                         PermissionScreenUI(
@@ -116,6 +132,7 @@ fun GalleryNavHost() {
                             onNavigateToSearch = {
                                 backStack.add(SearchScreen)
                             },
+                            onSelectionModeChange = { isSelectionActive = it },
                         )
                     }
                     entry<AlbumsScreen> {
@@ -143,6 +160,7 @@ fun GalleryNavHost() {
                                 backStack.removeLastOrNull()
                                 backStack.add(AlbumViewScreen(albumId = albumId, albumName = albumName))
                             },
+                            onSelectionModeChange = { isSelectionActive = it },
                         )
                     }
                     entry<PhotoViewScreen> {

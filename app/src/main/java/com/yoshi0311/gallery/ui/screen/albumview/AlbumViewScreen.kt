@@ -1,5 +1,6 @@
 package com.yoshi0311.gallery.ui.screen.albumview
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -51,6 +52,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -61,6 +63,7 @@ import com.yoshi0311.gallery.data.model.Album
 import com.yoshi0311.gallery.ui.component.MediaThumbnail
 import com.yoshi0311.gallery.ui.component.SelectionActionBar
 import com.yoshi0311.gallery.ui.component.SelectionTopBar
+import com.yoshi0311.gallery.util.shareMediaItems
 import com.yoshi0311.gallery.viewmodel.AlbumViewViewModel
 import kotlin.math.abs
 import kotlin.math.sqrt
@@ -73,10 +76,12 @@ fun AlbumViewScreen(
     onBack: () -> Unit,
     onNavigateToPhoto: (mediaId: Long) -> Unit,
     onNavigateToAlbum: ((albumId: Long, albumName: String) -> Unit)? = null,
+    onSelectionModeChange: (Boolean) -> Unit = {},
     viewModel: AlbumViewViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(albumId) { viewModel.initialize(albumId, albumName) }
 
+    val context = LocalContext.current
     val mediaItems by viewModel.mediaItems.collectAsStateWithLifecycle()
     val albums     by viewModel.albums.collectAsStateWithLifecycle()
     val columnCount    = viewModel.columnCount
@@ -85,6 +90,12 @@ fun AlbumViewScreen(
     val selectedIds    = viewModel.selectedIds
     val activeAlbumId  = viewModel.currentAlbumId ?: albumId
     val activeAlbumName = viewModel.currentAlbumName.ifEmpty { albumName }
+
+    // 다중 선택 상태를 GalleryNavHost로 올림
+    LaunchedEffect(selectionMode) { onSelectionModeChange(selectionMode) }
+
+    // 다중 선택 중 시스템 뒤로가기 → 선택 해제
+    BackHandler(enabled = selectionMode) { viewModel.exitSelectionMode() }
 
     // columnIndex 기반 단계별 썸네일 간격: 0~2→1dp, 3→0.5dp, 4+→0dp
     val thumbnailGap: Dp = when {
@@ -128,16 +139,18 @@ fun AlbumViewScreen(
                         }
                     },
                     scrollBehavior = scrollBehavior,
-                    modifier = Modifier.padding(vertical = 40.dp),
+//                    modifier = Modifier.padding(vertical = 40.dp),
                 )
             }
         },
         bottomBar = {
             if (selectionMode) {
                 SelectionActionBar(
-                    onFavorite = { /* P2-1에서 구현 */ },
-                    onShare    = { /* P2-3에서 구현 */ },
-                    onDelete   = { /* TODO */ },
+                    onFavorite = { /* TODO: AlbumViewViewModel에 즐겨찾기 추가 */ },
+                    onShare = {
+                        shareMediaItems(context, mediaItems.filter { it.id in selectedIds })
+                    },
+                    onDelete = { /* TODO: AlbumViewViewModel에 휴지통 추가 */ },
                 )
             }
         },
@@ -146,21 +159,27 @@ fun AlbumViewScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                // ── 수평 스와이프: 우측→드로어 열기, 좌측→드로어 닫기 ──
+                // ── 수평 스와이프: 우측→드로어 열기, 좌측→드로어 닫기 (두 손가락 시 비활성) ──
                 .pointerInput(isDrawerOpen) {
                     awaitEachGesture {
                         val down = awaitFirstDown(requireUnconsumed = false)
                         var totalX = 0f
                         var triggered = false
+                        var isMultiTouch = false
                         while (true) {
                             val event = awaitPointerEvent(PointerEventPass.Initial)
+                            if (event.changes.filter { it.pressed }.size >= 2) {
+                                isMultiTouch = true
+                            }
                             val change = event.changes.firstOrNull { it.id == down.id } ?: break
                             if (!change.pressed) break
-                            totalX += change.position.x - change.previousPosition.x
-                            if (!triggered && abs(totalX) > 90f) {
-                                triggered = true
-                                if (!isDrawerOpen && totalX > 0f) viewModel.openDrawer()
-                                else if (isDrawerOpen && totalX < 0f) viewModel.closeDrawer()
+                            if (!isMultiTouch) {
+                                totalX += change.position.x - change.previousPosition.x
+                                if (!triggered && abs(totalX) > 90f) {
+                                    triggered = true
+                                    if (!isDrawerOpen && totalX > 0f) viewModel.openDrawer()
+                                    else if (isDrawerOpen && totalX < 0f) viewModel.closeDrawer()
+                                }
                             }
                         }
                     }

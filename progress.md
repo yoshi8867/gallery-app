@@ -3,7 +3,7 @@
 ---
 
 ## 전체 진행도
-██████████████░░░░░░ 62% (10/16)
+████████████████░░░░ 80% (13/16)
 
 ---
 
@@ -88,8 +88,10 @@
 - [x] 실제로 삭제를 수행하진 않고 그런 흉내만 냄.
 - [x] 방금 삭제한 파일 기준 30일 후에 삭제되는 것처럼 썸네일 하단에 '30일'이라고 표시함. 삭제한 지 하루 지난 건 29일로. (하지만 실제로 30일이 지난다고 해서 파일이 삭제되지는 않음.) 
 
-### [P2-3] 공유 기능 ⏳
-- [ ] Android Sharesheet 연동 (단일/다중 선택 공유)
+### [P2-3] 공유 기능 ✅
+- [x] Android Sharesheet 연동 (단일/다중 선택 공유)
+- [x] `util/ShareUtil.kt` — 공통 공유 유틸 (단일: ACTION_SEND, 다중: ACTION_SEND_MULTIPLE)
+- [x] PhotoMainScreen, AlbumViewScreen, VideoScreen, RecentsScreen, FavoriteScreen 연동
 
 ### [P2-4] 검색 스크린 ⏳
 - [x] 구현 계획 취소됨.
@@ -110,15 +112,20 @@
 ### [P2-7] `PhotoMainScreen.kt`, `MediaGridScreen.kt`의 썸네일 패딩
 - [x] 썸네일 padding 값이 아주 작게 들어가도록(그래서 썸네일끼리 붙어있을 때 흰색 틈이 보이게) 수정하기.
 
-### [P2-8] `MediaGridScreen.kt`을 사용하는 화면들에서 핀치인/아웃 기능 확인
-- [ ] `PhotoMainScreen.kt`처럼 핀치 줌: 1.5 / 3 / 4 / 7 / 11 / 20단 전환(11·20단은 저해상도 썸네일)이 되어야 하는데 안 되고 있음. 구현은 이미 되어있는데 버그 때문에 기능하지 못 하는 것 같음.
+### [P2-8] `MediaGridScreen.kt`을 사용하는 화면들에서 핀치인/아웃 기능 확인 ✅
+- [x] `scaleAccumulator`를 Compose State → `pointerInput` 블록 내부 로컬 변수로 이동해 recompose 유발 방지
+- [x] `pointerInput(Unit)` → `pointerInput(onPinchIn, onPinchOut)` key 변경으로 람다 최신화 보장
+- [x] `PhotoMainScreen.kt`의 핀치 핸들러도 동일하게 수정 + 디버그 오버레이 제거
 
-### [P2-9] `PhotoMainScreen.kt`과 `AlbumViewScreen.kt`에서 다중 선택 시 기능 
-- [ ] 다중 선택 후 뒤로가기 버튼(시스템 버튼)을 눌렀을 때 선택 취소 되어야 함(지금은 앱이 종료되어 버림)
-- [ ] `PhotoMainScreen.kt`과 `AlbumViewScreen.kt`에서 다중 선택 시 하단 메뉴(사진/앨범/스토리/메뉴)가 사라져야 함. (다중 선택이 취소 되면 다시 생김)
+### [P2-9] `PhotoMainScreen.kt`과 `AlbumViewScreen.kt`에서 다중 선택 시 기능 ✅
+- [x] 다중 선택 후 뒤로가기 버튼(시스템 버튼)을 눌렀을 때 선택 취소 (`BackHandler` 적용)
+- [x] 다중 선택 시 하단 메뉴(사진/앨범/스토리/메뉴) 사라짐 — `onSelectionModeChange` 콜백으로 GalleryNavHost에 상태 전달
 
-### [P2-10] `AlbumViewScreen.kt`에서 손가락 두 개가 닿았을 때
-- [ ] 손가락 2개가 닿았다는 것은 핀치 줌을 시도하는 것임. 즉, 손가락 2개 닿은 상태에서는 드로어가 열리거나 닫히면 안 되도록 수정해야 함.
+### [P2-10] `AlbumViewScreen.kt`에서 손가락 두 개가 닿았을 때 ✅
+- [x] 스와이프 핸들러에 `isMultiTouch` 플래그 추가 — 두 손가락 감지 시 드로어 열기/닫기 비활성화
+
+### [P2-11] 화면 간 이동 ✅
+- [x] `NavDisplay`에 `transitionSpec`/`popTransitionSpec` 설정 — 진입 180ms fade, 뒤로가기 100ms fade
 
 ---
 
@@ -138,6 +145,7 @@
 ---
 
 ## 마지막 업데이트
+2026-04-14 | P2-3·P2-8·P2-9·P2-10·P2-11 완료 — 공유·핀치줌버그·뒤로가기선택취소·내비바숨김·두손가락드로어방지·화면전환속도
 2026-04-13 | P2-5 완료(부분) — LocationScreen 동작 확인. MapScreen은 Google Maps API 키 필요로 추후 개발 미룸
 2026-04-13 | P1-9 완료 — VideoScreen·RecentsScreen·MediaGridScreen 공용 컴포넌트·SelectionActionBar 더보기·NavigationBar 숨김
 2026-04-13 | P1-7 완료 — PhotoViewScreen (HorizontalPager + ZoomableImage + ThumbnailStrip + 상세정보 BottomSheet + BottomActionBar)

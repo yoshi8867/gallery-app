@@ -20,10 +20,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
@@ -62,8 +58,6 @@ fun MediaGridScreen(
     /** 썸네일 하단 우측에 표시할 텍스트 배지 (예: 휴지통 남은 일수). null이면 미표시 */
     getItemBadge: ((MediaItem) -> String?)? = null,
 ) {
-    var scaleAccumulator by remember { mutableStateOf(1f) }
-
     // columnLevels 전달 시 단계 인덱스 기반, 미전달 시 고정 1dp
     val thumbnailPadding = if (columnLevels.isNotEmpty()) {
         val idx = columnLevels.indexOf(columnCount).coerceAtLeast(0)
@@ -122,10 +116,12 @@ fun MediaGridScreen(
 
             val hasPinch = onPinchIn != null || onPinchOut != null
             val pinchModifier = if (hasPinch) {
-                Modifier.pointerInput(Unit) {
+                // scaleAccumulator를 포인터 블록 내부 로컬 변수로 두어 recompose 유발 방지
+                Modifier.pointerInput(onPinchIn, onPinchOut) {
                     awaitEachGesture {
                         var prevDistance = 0f
                         var isPinching = false
+                        var scaleAccumulator = 1f
                         while (true) {
                             val event = awaitPointerEvent(PointerEventPass.Initial)
                             val active = event.changes.filter { it.pressed }
