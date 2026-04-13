@@ -21,7 +21,7 @@ fun FavoriteScreen(
     MediaGridScreen(
         title = "즐겨찾기",
         items = items,
-        columnCount = 3,
+        columnCount = viewModel.columnCount,
         selectionMode = viewModel.selectionMode,
         selectedIds = viewModel.selectedIds,
         onBack = onBack,
@@ -36,6 +36,9 @@ fun FavoriteScreen(
         onFavorite = { viewModel.removeSelectedFromFavorites() },
         onShare = { shareMediaItems(context, items.filter { it.id in viewModel.selectedIds }) },
         onDelete = { viewModel.moveSelectedToTrash() },
+        onPinchIn = { viewModel.zoomIn() },
+        onPinchOut = { viewModel.zoomOut() },
+        columnLevels = listOf(3, 4, 7),
         showFavoriteHeart = true,
     )
 }

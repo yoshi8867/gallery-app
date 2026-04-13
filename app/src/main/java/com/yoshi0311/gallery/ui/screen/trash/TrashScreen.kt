@@ -48,7 +48,7 @@ fun TrashScreen(
     MediaGridScreen(
         title = "휴지통",
         items = items,
-        columnCount = 3,
+        columnCount = viewModel.columnCount,
         selectionMode = viewModel.selectionMode,
         selectedIds = viewModel.selectedIds,
         onBack = onBack,
@@ -60,6 +60,9 @@ fun TrashScreen(
             if (!viewModel.selectionMode) viewModel.enterSelectionMode(item.id)
         },
         onExitSelection = { viewModel.exitSelectionMode() },
+        onPinchIn = { viewModel.zoomIn() },
+        onPinchOut = { viewModel.zoomOut() },
+        columnLevels = listOf(3, 4, 7),
         getItemBadge = { item -> daysRemainingMap[item.id]?.let { "${it}일" } },
         selectionBottomBar = {
             TrashSelectionBar(

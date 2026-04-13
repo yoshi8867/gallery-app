@@ -35,7 +35,7 @@ fun RecentsScreen(
     MediaGridScreen(
         title = "최근 항목",
         items = items,
-        columnCount = 3,
+        columnCount = viewModel.columnCount,
         selectionMode = selectionMode,
         selectedIds = selectedIds,
         onBack = onBack,
@@ -50,6 +50,9 @@ fun RecentsScreen(
         onFavorite = { viewModel.addSelectedToFavorites() },
         onShare = { shareMediaItems(context, items.filter { it.id in selectedIds }) },
         onDelete = { viewModel.moveSelectedToTrash() },
+        onPinchIn = { viewModel.zoomIn() },
+        onPinchOut = { viewModel.zoomOut() },
+        columnLevels = listOf(3, 4, 7),
         headerContent = if (!selectionMode) {
             {
 //                SingleChoiceSegmentedButtonRow(

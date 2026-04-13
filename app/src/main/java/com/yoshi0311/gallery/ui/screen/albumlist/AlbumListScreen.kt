@@ -72,7 +72,6 @@ fun AlbumListScreen(
 //                    }
                 },
                 scrollBehavior = scrollBehavior,
-                modifier = Modifier.padding(vertical = 40.dp),
             )
         },
     ) { innerPadding ->

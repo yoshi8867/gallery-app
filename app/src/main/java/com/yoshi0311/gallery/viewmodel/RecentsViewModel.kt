@@ -50,6 +50,21 @@ class RecentsViewModel @Inject constructor(
 
     fun updateFilter(f: RecentsFilter) { filter = f }
 
+    // ── 핀치 줌 (3 → 4 → 7단) ────────────────────────────────
+    private val columnLevels = listOf(3, 4, 7)
+    var columnCount by mutableStateOf(3)
+        private set
+
+    fun zoomIn() {
+        val idx = columnLevels.indexOf(columnCount)
+        if (idx > 0) columnCount = columnLevels[idx - 1]
+    }
+
+    fun zoomOut() {
+        val idx = columnLevels.indexOf(columnCount)
+        if (idx < columnLevels.lastIndex) columnCount = columnLevels[idx + 1]
+    }
+
     // ── 다중 선택 ────────────────────────────────────────────────
     var selectionMode by mutableStateOf(false)
         private set
