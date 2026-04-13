@@ -3,6 +3,7 @@ package com.yoshi0311.gallery.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yoshi0311.gallery.data.model.MediaItem
@@ -10,7 +11,7 @@ import com.yoshi0311.gallery.data.repository.MediaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -27,13 +28,16 @@ class PhotoMainViewModel @Inject constructor(
         val items: List<MediaItem>,
     )
 
-    val sections: StateFlow<List<MediaSection>> = mediaRepository.getAllMedia()
-        .map { it.groupToSections() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = emptyList(),
-        )
+    val sections: StateFlow<List<MediaSection>> = combine(
+        mediaRepository.getAllMedia(),
+        snapshotFlow { columnCount },
+    ) { items, cols ->
+        items.groupToSections(cols)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = emptyList(),
+    )
 
     // ── 컬럼 수 (spec 1.5/3/4/7/11/20 → 정수 근사) ─────────────
     private val columnLevels = listOf(2, 3, 4, 7, 11, 20)
@@ -77,10 +81,15 @@ class PhotoMainViewModel @Inject constructor(
         selectedIds = emptySet()
     }
 
-    // ── 날짜 그룹핑 (일별) ───────────────────────────────────────
-    private fun List<MediaItem>.groupToSections(): List<MediaSection> {
+    // ── 날짜 그룹핑 (컬럼 수에 따라 일/월/연 단위 전환) ────────────
+    // cols ≤ 3 (1~2단계): 일별  /  cols 4~7 (3~4단계): 월별  /  cols ≥ 11 (5단계~): 연별
+    private fun List<MediaItem>.groupToSections(cols: Int): List<MediaSection> {
         if (isEmpty()) return emptyList()
-        val fmt = SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN)
+        val fmt = when {
+            cols <= 3 -> SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN)
+            cols <= 7 -> SimpleDateFormat("yyyy년 M월", Locale.KOREAN)
+            else      -> SimpleDateFormat("yyyy년", Locale.KOREAN)
+        }
         return groupBy { fmt.format(Date(it.dateTaken)) }
             .map { (label, items) -> MediaSection(dateLabel = label, items = items) }
     }

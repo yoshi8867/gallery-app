@@ -34,9 +34,9 @@ class AlbumViewViewModel @Inject constructor(
     var currentAlbumName: String by mutableStateOf("")
         private set
 
-    /** 최초 1회 초기화 */
+    /** 앨범 초기화 — albumId가 달라졌을 때만 업데이트 (recomposition 시 불필요한 재설정 방지) */
     fun initialize(albumId: Long, albumName: String) {
-        if (albumIdFlow.value == null) {
+        if (albumIdFlow.value != albumId) {
             albumIdFlow.value = albumId
             currentAlbumId = albumId
             currentAlbumName = albumName
