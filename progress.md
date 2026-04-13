@@ -3,7 +3,7 @@
 ---
 
 ## 전체 진행도
-█████████░░░░░░░░░░░ 32% (9/28)
+████████████░░░░░░░░ 50% (8/16)
 
 ---
 
@@ -51,16 +51,16 @@
 - [x] 열 수 5단계 (닫힘: 2/3/4/7/12단, 열림: 2/3/5/9단)
 - [x] 다중 선택 모드 (롱프레스)
 
-### [P1-7] Photo View Screen ⏳
-- [ ] `PhotoViewViewModel.kt`
-- [ ] `PhotoViewScreen.kt` — HorizontalPager + ZoomableImage
-- [ ] 하단 ThumbnailStrip (LazyRow)
-- [ ] AnchoredDraggable 상세정보 패널 (파일명·날짜·크기·해상도·위치)
-- [ ] BottomActionBar (즐겨찾기/편집Toast/AIToast/공유/삭제)
+### [P1-7] Photo View Screen ✅
+- [x] `PhotoViewViewModel.kt`
+- [x] `PhotoViewScreen.kt` — HorizontalPager + ZoomableImage
+- [x] 하단 ThumbnailStrip (LazyRow) — 구현 완료, 현재 주석 처리 상태
+- [x] 상세정보 패널 (ModalBottomSheet — 파일명·날짜·크기·해상도·위치)
+- [x] BottomActionBar (즐겨찾기/편집Toast/AIToast/공유/삭제)
 
-### [P1-8] 동영상 재생 (ExoPlayer) ⏳
-- [ ] Photo View 내 동영상 분기: ExoPlayer 컨트롤러 + 뮤트 버튼
-- [ ] `VideoOverlay.kt` Composable
+### [P1-8] 동영상 재생 (ExoPlayer) ✅
+- [x] Photo View 내 동영상 분기: ExoPlayer 컨트롤러 + 뮤트 버튼
+- [x] `VideoOverlay.kt` Composable
 
 ### [P1-9] 특수 앨범: 동영상 / 최근 항목 ⏳
 - [ ] `VideoViewModel.kt` + `VideoScreen.kt` (동영상 필터, 날짜 섹션)
@@ -114,4 +114,5 @@
 ---
 
 ## 마지막 업데이트
-2026-04-12 | P1-6 완료 — AlbumViewScreen (좌측 드로어 + 앨범 전환 + 핀치 줌 + 다중 선택)
+2026-04-13 | P1-7 완료 — PhotoViewScreen (HorizontalPager + ZoomableImage + ThumbnailStrip + 상세정보 BottomSheet + BottomActionBar)
+2026-04-13 | P1-8 완료 — VideoOverlay (ExoPlayer + 뮤트 버튼)
