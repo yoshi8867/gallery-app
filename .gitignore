@@ -1,0 +1,32 @@
+# Built artifacts
+/build/
+/app/build/
+
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+
+# Local configuration (machine-specific, secrets)
+local.properties
+
+# IDE - Android Studio / IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Kotlin
+.kotlin/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Development artifacts (not part of source)
+plan/
+req/
+visual/
+progress.md
+CLAUDE.md
