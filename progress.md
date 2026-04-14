@@ -135,20 +135,22 @@
 
 ## Phase 3 — 선택 기능 (최후순위)
 
-### [P3-1] 스토리 리스트 스크린 ⏳
-- [ ] `Story.kt` 도메인 모델
-- [ ] `StoryViewModel.kt` + `StoryListScreen.kt`
-- [ ] 자동 생성 로직 (P3 구현 전 기준 확정 필요)
+### [P3-1] 스토리 리스트 스크린 ✅
+- [x] `Story.kt` 도메인 모델 (bucketId 기반, count 프로퍼티)
+- [x] `StoryViewModel.kt` — bucketId 그룹핑, 3장 이상 버킷만 스토리 생성
+- [x] `StoryListScreen.kt` — HorizontalPager 캐러셀(peek), LazyRow 최근, 전체너비 정사각형 다양한 스토리
 
-### [P3-2] 스토리 뷰 스크린 ⏳
-- [ ] `StoryViewScreen.kt` — CrossFade 슬라이드쇼 + LinearProgressIndicator
-- [ ] 재생 컨트롤 (이전/재생·일시정지/다음)
-- [ ] 재생속도 DropdownMenu (0.5x/1x/1.5x/2x)
-- [ ] 배경음악 ModalBottomSheet
+### [P3-2] 스토리 뷰 스크린 ✅
+- [x] `StoryViewScreen.kt` — Ambient Mode 블러 배경 + CrossFade 슬라이드쇼
+- [x] `StoryViewViewModel.kt` — 200ms 타이머, 일시정지 연속성(elapsedInCurrentSlideMs)
+- [x] 재생 컨트롤: 좌/중/우 탭존 + 하단 🎵|▶시간|뮤트
+- [x] 재생속도 DropdownMenu (0.5x/1x/1.5x/2x)
+- [x] 배경음악 ModalBottomSheet + `res/raw/autumn_day.mp3` 번들 (ExoPlayer 연결은 추후)
 
 ---
 
 ## 마지막 업데이트
+2026-04-14 | P3-1·P3-2 완료 — 스토리 리스트(HorizontalPager 캐러셀·LazyRow·전체너비카드) + 스토리 뷰(Ambient Mode·CrossFade·200ms 타이머·음악 바텀시트)
 2026-04-14 | 테마 개선 — `Theme.kt` surface·background·surfaceContainer 계열 흰색 고정 (다이나믹 컬러 회색 틴트 제거)
 2026-04-14 | P2-1·P2-2 마무리 — 즐겨찾기 하트배지·휴지통포토뷰하단메뉴·MediaGridScreen BackHandler·AlbumView 즐겨찾기/삭제 구현
 2026-04-14 | P2-3·P2-8·P2-9·P2-10·P2-11 완료 — 공유·핀치줌버그·뒤로가기선택취소·내비바숨김·두손가락드로어방지·화면전환속도

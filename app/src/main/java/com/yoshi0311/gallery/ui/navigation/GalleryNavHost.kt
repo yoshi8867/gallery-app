@@ -37,6 +37,8 @@ import com.yoshi0311.gallery.ui.screen.recents.RecentsScreen as RecentsScreenUI
 import com.yoshi0311.gallery.ui.screen.location.LocationScreen as LocationScreenUI
 import com.yoshi0311.gallery.ui.screen.map.MapScreen as MapScreenUI
 import com.yoshi0311.gallery.ui.screen.trash.TrashScreen as TrashScreenUI
+import com.yoshi0311.gallery.ui.screen.story.StoryListScreen as StoryListScreenUI
+import com.yoshi0311.gallery.ui.screen.story.StoryViewScreen as StoryViewScreenUI
 import com.yoshi0311.gallery.ui.screen.video.VideoScreen as VideoScreenUI
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -77,7 +79,8 @@ fun GalleryNavHost() {
         current !is TrashScreen &&
         current !is LocationScreen &&
         current !is MapScreen &&
-        current !is SettingsScreen
+        current !is SettingsScreen &&
+        current !is StoryViewScreen
 
     Scaffold(
         bottomBar = {
@@ -146,7 +149,17 @@ fun GalleryNavHost() {
                         )
                     }
                     entry<StoryListScreen> {
-                        PlaceholderScreen("스토리 리스트 (P3에서 구현 예정)")
+                        StoryListScreenUI(
+                            onNavigateToStory = { storyId ->
+                                backStack.add(StoryViewScreen(storyId = storyId))
+                            },
+                        )
+                    }
+                    entry<StoryViewScreen> {
+                        StoryViewScreenUI(
+                            storyId = it.storyId,
+                            onBack = { backStack.removeLastOrNull() },
+                        )
                     }
                     entry<AlbumViewScreen> {
                         AlbumViewScreen(
