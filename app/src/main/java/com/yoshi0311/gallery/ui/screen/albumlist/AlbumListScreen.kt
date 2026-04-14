@@ -2,12 +2,14 @@ package com.yoshi0311.gallery.ui.screen.albumlist
 
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -19,6 +21,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -82,7 +86,6 @@ fun AlbumListScreen(
         ) {
             AlbumListHeroHeader(
                 onSearch = onNavigateToSearch,
-                onMore = { /* TODO: 숨김 폴더 토글 드롭다운 */ },
             )
 
             LazyVerticalGrid(
@@ -154,19 +157,42 @@ fun AlbumListScreen(
 @Composable
 private fun AlbumListHeroHeader(
     onSearch: () -> Unit,
-    onMore: () -> Unit,
 ) {
+    var expanded by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(end = 4.dp, top = 4.dp, bottom = 4.dp),
+            .padding(0.dp),
         horizontalArrangement = Arrangement.End,
     ) {
-        IconButton(onClick = onSearch) {
+        IconButton(onClick = onSearch, modifier = Modifier.size(36.dp)) {
             Icon(Icons.Default.Search, contentDescription = "검색")
         }
-        IconButton(onClick = onMore) {
-            Icon(Icons.Default.MoreVert, contentDescription = "더보기")
+        Box {
+            IconButton(onClick = { expanded = true }, modifier = Modifier.size(36.dp)) {
+                Icon(Icons.Default.MoreVert, contentDescription = "더보기")
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
+                DropdownMenuItem(
+                    text = { Text("선택") },
+                    onClick = { expanded = false },
+                )
+                DropdownMenuItem(
+                    text = { Text("만들기") },
+                    onClick = { expanded = false },
+                )
+                DropdownMenuItem(
+                    text = { Text("비슷한 이미지 모아보기") },
+                    onClick = { expanded = false },
+                )
+                DropdownMenuItem(
+                    text = { Text("슬라이드쇼") },
+                    onClick = { expanded = false },
+                )
+            }
         }
     }
 }

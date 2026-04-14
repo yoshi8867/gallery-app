@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,12 +23,16 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -55,6 +61,7 @@ import java.util.Locale
 @Composable
 fun StoryListScreen(
     onNavigateToStory: (storyId: Long) -> Unit,
+    onNavigateToSearch: () -> Unit,
     viewModel: StoryViewModel = hiltViewModel(),
 ) {
     val stories by viewModel.stories.collectAsStateWithLifecycle()
@@ -66,68 +73,110 @@ fun StoryListScreen(
     // LazyColumn 밖에서 rememberPagerState 호이스팅
     val pagerState = rememberPagerState { stories.size }
 
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(title = { Text("스토리") })
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "스토리",
+                        style = MaterialTheme.typography.headlineLarge,
+                        modifier = Modifier.padding(vertical = 40.dp),
+                    )
+                },
+                scrollBehavior = scrollBehavior,
+            )
         },
     ) { innerPadding ->
-        if (stories.isEmpty()) {
-            EmptyStoryState(modifier = Modifier.padding(innerPadding))
-        } else {
-            LazyColumn(
-                contentPadding = innerPadding,
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                // 추천 스토리 캐러셀 — HorizontalPager (스냅 슬라이드, 좌우 끄트머리 노출)
-                item {
-                    HorizontalPager(
-                        state = pagerState,
-                        contentPadding = PaddingValues(horizontal = 24.dp),
-                        pageSpacing = 10.dp,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 12.dp),
-                    ) { page ->
-                        FeaturedStoryCard(
-                            story = stories[page],
-                            onClick = { onNavigateToStory(stories[page].id) },
-                        )
-                    }
-                }
-
-                // 최근 스토리 섹션 — LazyRow (가로 스크롤)
-                if (recentStories.isNotEmpty()) {
-                    item { SectionHeader("최근 스토리") }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = innerPadding.calculateTopPadding()),
+        ) {
+            StoryHeroHeader(
+                onSearch = onNavigateToSearch,
+                onMore = { /* TODO */ },
+            )
+            if (stories.isEmpty()) {
+                EmptyStoryState()
+            } else {
+                LazyColumn(
+                    contentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding()),
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    // 추천 스토리 캐러셀 — HorizontalPager (스냅 슬라이드, 좌우 끄트머리 노출)
                     item {
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(10.dp),
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            items(recentStories) { story ->
-                                RecentStoryCard(
-                                    story = story,
-                                    onClick = { onNavigateToStory(story.id) },
-                                )
-                            }
+                        HorizontalPager(
+                            state = pagerState,
+                            contentPadding = PaddingValues(horizontal = 24.dp),
+                            pageSpacing = 10.dp,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 12.dp),
+                        ) { page ->
+                            FeaturedStoryCard(
+                                story = stories[page],
+                                onClick = { onNavigateToStory(stories[page].id) },
+                            )
                         }
-                        Spacer(modifier = Modifier.height(8.dp))
                     }
-                }
 
-                // 다양한 스토리 섹션 — 정사각형 전체 너비 카드
-                if (diverseStories.isNotEmpty()) {
-                    item { SectionHeader("다양한 스토리") }
-                    items(diverseStories) { story ->
-                        DiverseStoryCard(
-                            story = story,
-                            onClick = { onNavigateToStory(story.id) },
-                        )
+                    // 최근 스토리 섹션 — LazyRow (가로 스크롤)
+                    if (recentStories.isNotEmpty()) {
+                        item { SectionHeader("최근 스토리") }
+                        item {
+                            LazyRow(
+                                contentPadding = PaddingValues(horizontal = 16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                items(recentStories) { story ->
+                                    RecentStoryCard(
+                                        story = story,
+                                        onClick = { onNavigateToStory(story.id) },
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
                     }
-                }
 
-                item { Spacer(modifier = Modifier.height(16.dp)) }
+                    // 다양한 스토리 섹션 — 정사각형 전체 너비 카드
+                    if (diverseStories.isNotEmpty()) {
+                        item { SectionHeader("다양한 스토리") }
+                        items(diverseStories) { story ->
+                            DiverseStoryCard(
+                                story = story,
+                                onClick = { onNavigateToStory(story.id) },
+                            )
+                        }
+                    }
+
+                    item { Spacer(modifier = Modifier.height(16.dp)) }
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun StoryHeroHeader(
+    onSearch: () -> Unit,
+    onMore: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(0.dp),
+        horizontalArrangement = Arrangement.End,
+    ) {
+        IconButton(onClick = onSearch, modifier = Modifier.size(36.dp)) {
+            Icon(Icons.Default.Search, contentDescription = "검색")
+        }
+        IconButton(onClick = onMore, modifier = Modifier.size(36.dp)) {
+            Icon(Icons.Default.MoreVert, contentDescription = "더보기")
         }
     }
 }

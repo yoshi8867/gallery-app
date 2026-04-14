@@ -153,6 +153,9 @@ fun GalleryNavHost() {
                             onNavigateToStory = { storyId ->
                                 backStack.add(StoryViewScreen(storyId = storyId))
                             },
+                            onNavigateToSearch = {
+                                backStack.add(SearchScreen)
+                            },
                         )
                     }
                     entry<StoryViewScreen> {

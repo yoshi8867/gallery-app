@@ -1,6 +1,8 @@
 package com.yoshi0311.gallery.ui.screen.photoview
 
+import android.app.Activity
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -52,6 +54,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -107,7 +110,17 @@ fun PhotoViewScreen(
     val readyForMediaId = viewModel.readyForMediaId
     val isMuted = viewModel.isMuted
     val context = LocalContext.current
+    val activity = context as? Activity
     val scope = rememberCoroutineScope()
+
+    var isLandscape by remember { mutableStateOf(false) }
+
+    // 화면 떠날 때 방향 고정 해제
+    DisposableEffect(Unit) {
+        onDispose {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        }
+    }
 
     val pagerState = rememberPagerState(initialPage = 0) { mediaItems.size }
 
@@ -200,11 +213,17 @@ fun PhotoViewScreen(
                             )
                         }
                     } else {
-                        // 화면 회전 버튼 (추후 구현)
-                        IconButton(onClick = { /* 추후 구현 */ }) {
+                        // 세로/가로 전환 버튼
+                        IconButton(onClick = {
+                            isLandscape = !isLandscape
+                            activity?.requestedOrientation = if (isLandscape)
+                                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                            else
+                                ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                        }) {
                             Icon(
                                 imageVector = Icons.Default.ScreenRotation,
-                                contentDescription = "화면 회전",
+                                contentDescription = if (isLandscape) "세로 모드로 전환" else "가로 모드로 전환",
                             )
                         }
                         IconButton(onClick = { /* 추후 구현 */ }) {

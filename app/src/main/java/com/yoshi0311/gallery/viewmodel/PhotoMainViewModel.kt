@@ -72,6 +72,11 @@ class PhotoMainViewModel @Inject constructor(
         selectedIds = setOf(id)
     }
 
+    fun enterSelectionMode() {
+        selectionMode = true
+        selectedIds = emptySet()
+    }
+
     fun toggleSelection(id: Long) {
         selectedIds = if (id in selectedIds) selectedIds - id else selectedIds + id
     }
