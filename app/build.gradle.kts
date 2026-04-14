@@ -20,7 +20,6 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.secrets.gradle.plugin)
 }
 
 android {
@@ -133,10 +132,6 @@ dependencies {
 
     // Accompanist Permissions
     implementation(libs.accompanist.permissions)
-
-    // Google Maps Compose
-    implementation(libs.maps.compose)
-    implementation(libs.maps.compose.utils)
 
     // ExifInterface (EXIF GPS 읽기)
     implementation(libs.androidx.exifinterface)
